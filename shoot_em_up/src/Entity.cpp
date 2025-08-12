@@ -4,8 +4,6 @@ Entity::Entity(int h, int w, int y, int x, int color)
     : size{ h,w }, position{ y,x }, color_pair{ color } {
 }
 
-Entity::~Entity() { erase(); }
-
 void Entity::draw(int h, int w, int y, int x) {
     size = { h,w };
     position = { y,x };
@@ -57,3 +55,5 @@ void Entity::adjust_to_screen() {
     if (position.x + size.x > cols - 1) position.x = cols - 1 - size.x;
     if (position.y + size.y > rows - 1) position.y = rows - 1 - size.y;
 }
+
+Entity::~Entity() { erase();  delwin(object); object = nullptr; }

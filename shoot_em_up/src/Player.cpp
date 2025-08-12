@@ -42,4 +42,8 @@ int Player::get_shoot_count() const {
     return shoot_count;
 }
 
-Player::~Player() { erase(); delwin(object); object = nullptr; }
+//Player::~Player() { 
+//    erase(); 
+//    delwin(object); 
+//    object = nullptr; 
+//}

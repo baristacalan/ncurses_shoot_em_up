@@ -2,9 +2,19 @@
 
 namespace {
     void init_curses() {
+        
         initscr();
+        
         napms(300);
-        if (has_colors()) { start_color(); use_default_colors(); init_pair(1, COLOR_CYAN, -1); }
+        
+        if (has_colors()) { 
+            start_color(); 
+            use_default_colors(); 
+            init_pair(1, COLOR_CYAN, -1); 
+            init_pair(2, COLOR_BLACK, COLOR_WHITE);
+            init_pair(3, COLOR_RED, -1);
+        }
+
         keypad(stdscr, true);
         noecho();
         cbreak();
@@ -26,8 +36,16 @@ namespace {
         auto pos = p.get_position();
         int shot_count = p.get_shoot_count();
 
+
+        attron(COLOR_PAIR(2));
         mvprintw(0, 0, "X:%d Y:%d  ", pos.x, pos.y);
+        attroff(COLOR_PAIR(2));
+
+        attron(COLOR_PAIR(3));
+        
         mvprintw(0, COLS - 23, "Shots count: %d", shot_count);
+        attroff(COLOR_PAIR(3));
+        
     }
 } // namespace
 

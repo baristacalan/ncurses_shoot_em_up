@@ -7,6 +7,7 @@
 struct Bullet { Points position_b; Bullet(int y, int x) : position_b{ y,x } {} };
 
 class Player : public Entity {
+
     std::vector<Bullet> bullets;
     int score{ 0 };
     int shoot_count{};
@@ -19,6 +20,6 @@ public:
 
     int get_shoot_count() const;
 
-    ~Player();
+    ~Player() override = default;
 };
 #endif //!PLAYER_H
