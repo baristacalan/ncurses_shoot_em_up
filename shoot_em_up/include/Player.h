@@ -21,7 +21,4 @@ public:
 
     ~Player();
 };
-
-
-
 #endif //!PLAYER_H
