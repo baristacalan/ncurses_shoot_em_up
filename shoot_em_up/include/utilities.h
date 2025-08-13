@@ -4,15 +4,21 @@
 
 #include <curses.h>
 #include <vector>
+#include <utility>
+#include <memory>
+#include <random>
 //#include <list>
 //#include <iostream>
 //#include <chrono>
 
 struct Points { int y, x;};
 
-//WINDOW* create_window(int height, int width, int posy, int posx);
-//
-//void destroy_window(WINDOW* local_win);
+struct Rect {
+
+	int posy, posx;
+	int height, width;
+
+};
 
 
 #endif // !UTILITIES_H

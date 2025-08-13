@@ -2,26 +2,24 @@
 #ifndef ENEMY_H
 #define ENEMY_H
 #include <utilities.h>
-
 #include "Entity.h"
 
 class Enemy : public Entity {
-    int   speed{ 1 };
-    chtype glyph{ 'V' | A_BOLD };
-
 public:
-    Enemy(int start_x, int speed_ = 1, int color_pair_ = 2, chtype glyph_ = 'V' | A_BOLD);
+    Enemy(int h = 6, int w = 3, int y = 1, int x = COLS / 2, int cp = 3, chtype chr1 = 0, chtype chr2 = 0);
 
-    // advance one step downward and redraw
-    void fall();
+    // Aþaðý düþürme
+    bool fall(int step = 1);
+    //static void UpdateAll(std::vector<std::unique_ptr<Enemy>>& v, int step = 1);
 
-    // reached bottom?
-    bool at_bottom() const;
+    static void update_enemy(std::vector<std::unique_ptr<Enemy>>& enemies, int step = 1);
 
-private:
-    void paint();  // put glyph into the 1x1 window
+    Enemy(const Enemy&) = delete; // Copy ctor'i siler.
+    Enemy& operator=(const Enemy&) = delete; // operator= 'i siler
+    //Enemy(Enemy&&) noexcept;
+    //Enemy& operator=(Enemy&&) noexcept;
+
+    ~Enemy() override = default;
 };
 
-
-
-#endif // !ENEMY_H
+#endif

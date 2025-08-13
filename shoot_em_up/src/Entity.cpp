@@ -4,7 +4,7 @@ Entity::Entity(int h, int w, int y, int x, int color)
     : size{ h,w }, position{ y,x }, color_pair{ color } {
 }
 
-void Entity::draw(int h, int w, int y, int x) {
+void Entity::draw(int h, int w, int y, int x, chtype chr1, chtype chr2) {
     size = { h,w };
     position = { y,x };
     adjust_to_screen();
@@ -13,26 +13,29 @@ void Entity::draw(int h, int w, int y, int x) {
     if (!object) return;
 
     if (color_pair > 0) wbkgd(object, COLOR_PAIR(color_pair));
-    box(object, 1, 1);
-    wrefresh(object);
+    box(object, chr1, chr2);
+    //wrefresh(object);
+    wnoutrefresh(object);
 }
 
-void Entity::redraw() {
+void Entity::redraw(chtype chr1, chtype chr2) {
     if (!object) return;
     adjust_to_screen();
     if (color_pair > 0) wbkgd(object, COLOR_PAIR(color_pair));
     mvwin(object, position.y, position.x);
-    box(object, 1, 1);
-    wrefresh(object);
+    box(object, chr1, chr2);
+    //wrefresh(object);
+    wnoutrefresh(object);
 }
 
 void Entity::erase() {
     if (!object) return;
-    wcolor_set(object, 0, nullptr);
-    wattrset(object, A_NORMAL);
-    wbkgd(object, A_NORMAL);
+    //wcolor_set(object, 0, nullptr);
+    //wattrset(object, A_NORMAL);
+    //wbkgd(object, A_NORMAL);
     werase(object);
-    wrefresh(object);
+    //wrefresh(object);
+    wnoutrefresh(object);
     //delwin(object);
     //object = nullptr;
 }

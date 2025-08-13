@@ -12,9 +12,18 @@ class Player : public Entity {
     int score{ 0 };
     int shoot_count{};
 public:
-    Player(int height, int width, int posy, int posx);
-    void move_left();
-    void move_right();
+    
+    Player(const Player&) = delete;
+    Player& operator=(const Player&) = delete;
+
+    Player(int height, int width, int posy, int posx, chtype chr1, chtype chr2);
+
+    // inside the 'public:' section of the Player class
+    std::vector<Bullet>& get_bullets();
+
+
+    void move_left(int speed);
+    void move_right(int speed);
     void fire();
     void update_bullets();
 

@@ -1,28 +1,29 @@
 #include "Enemy.h"
 
-Enemy::Enemy(int start_x, int speed_, int color_pair_, chtype glyph_)
-    : Entity(1, 1, 0, start_x, color_pair_), speed(speed_), glyph(glyph_) {
-    draw(1, 1, 0, start_x);
-    //redraw();
-    paint();
+
+Enemy::Enemy(int h, int w, int y, int x, int cp, chtype chr1, chtype chr2)
+    : Entity(h, w, y, x, cp) {
+    draw(h, w, y, x, chr1, chr2);
 }
 
-
-void Enemy::paint() {
-    if (!object) return;
-    if (color_pair > 0) wattron(object, COLOR_PAIR(color_pair));
-    mvwaddch(object, 0, 0, glyph);
-    if (color_pair > 0) wattroff(object, COLOR_PAIR(color_pair));
-    wrefresh(object);
+bool Enemy::fall(int step) {
+    erase();
+    move_down(step);
+    redraw(0, 0);
+    Points p = get_position(), s = get_size();
+    return (p.y + s.y) < (LINES - 1);
+}
+// Enemy.cpp
+void Enemy::update_enemy(std::vector<std::unique_ptr<Enemy>>& enemies, int step) {
+    for (auto it = enemies.begin(); it != enemies.end(); ) {
+        if (!(*it)->fall(step)) it = enemies.erase(it);
+        else ++it;
+    }
 }
 
-void Enemy::fall() {
-    move_by(speed, 0);
-    draw(1, 1, position.y, position.x);
-    paint();
-}
-
-bool Enemy::at_bottom() const {
-    int rows, cols; getmaxyx(stdscr, rows, cols);
-    return position.y >= rows - 1 - size.y;
-}
+//
+//void Enemy::UpdateAll(std::vector<std::unique_ptr<Enemy>>& v, int step) {
+//    v.erase(std::remove_if(v.begin(), v.end(),
+//        [step](std::unique_ptr<Enemy>& e) { return !e->fall(step); }),
+//        v.end());
+//}

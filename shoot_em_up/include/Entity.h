@@ -20,15 +20,16 @@ public:
     virtual ~Entity();
 
     // window lifecycle + drawing
-    void draw(int h, int w, int y, int x);
-    void redraw();                  
+    void draw(int h, int w, int y, int x, chtype chr1, chtype chr2);
+    void redraw(chtype chr1, chtype chr2);
     void erase();
 
     // movement
     void set_position(int y, int x);
     void move_by(int dy, int dx);
-    void move_left(int step = 2) { move_by(0, -step); }
-    void move_right(int step = 2) { move_by(0, step); }
+    void move_left(int speed = 1) { move_by(0, -speed); }
+    void move_right(int step = 1) { move_by(0, step); }
+    void move_down(int step = 1) { move_by(step, 0); }
 
     // access
     Points get_position() const { return position; }
