@@ -42,18 +42,18 @@ namespace {
         int shot_count = p.get_shoot_count();
 
 
-        attron(COLOR_PAIR(2) | A_BOLD);
+        attron(COLOR_PAIR(CYAN) | A_BOLD);
         mvprintw(0, 0, "X:%d Y:%d  ", pos.x, pos.y);
-        attroff(COLOR_PAIR(2) | A_BOLD);
+        attroff(COLOR_PAIR(CYAN) | A_BOLD);
 
-        attron(COLOR_PAIR(3) | A_BOLD);
+        attron(COLOR_PAIR(RED) | A_BOLD);
         
         mvprintw(0, COLS - 23, "SHOTS COUNT: %d", shot_count);
-        attroff(COLOR_PAIR(3) | A_BOLD);
+        attroff(COLOR_PAIR(RED) | A_BOLD);
         
-        attron(COLOR_PAIR(4) | A_BOLD);
+        attron(COLOR_PAIR(GREEN) | A_BOLD);
         mvprintw(1, COLS - 23, "SCORE: %d", p.get_score());
-        attroff(COLOR_PAIR(4) | A_BOLD);
+        attroff(COLOR_PAIR(GREEN) | A_BOLD);
     }
     
     int rand_x(int w) {
