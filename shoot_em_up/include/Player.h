@@ -25,9 +25,15 @@ public:
     void move_left(int speed);
     void move_right(int speed);
     void fire();
+    void draw_bullets() const;
     void update_bullets();
 
     int get_shoot_count() const;
+
+    int get_score() const;
+    void set_score(int new_score);
+
+
 
     ~Player() override = default;
 };

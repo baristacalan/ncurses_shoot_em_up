@@ -35,6 +35,7 @@ public:
     Points get_position() const { return position; }
     Points get_size()     const { return size; }
     bool   is_alive()     const { return alive; }
+    void set_alive_status(bool alive) { this->alive = alive; }
     void   set_color(int pair) { color_pair = pair; }
 };
 

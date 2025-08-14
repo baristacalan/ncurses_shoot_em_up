@@ -7,17 +7,30 @@
 
 
 class Game {
-    bool is_running{ true };
+    
+    //Objects
     std::vector<std::unique_ptr<Enemy>> enemies;
     std::unique_ptr<Player> player;
 
-    int frame{ 0 };
+    
+    //Functions
+    void update();
+    void render();
     void process_collisions();
+
+
+    //Variables
+    bool is_running{ true };
+    int frame{ 0 };
+
+
+    void game_over();
+
 
 public:
     Game();
+
     void run();
-    void update();
 
     ~Game();
 };

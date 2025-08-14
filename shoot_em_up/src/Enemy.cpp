@@ -7,13 +7,12 @@ Enemy::Enemy(int h, int w, int y, int x, int cp, chtype chr1, chtype chr2)
 }
 
 bool Enemy::fall(int step) {
-    erase();
     move_down(step);
-    redraw(0, 0);
     Points p = get_position(), s = get_size();
-    return (p.y + s.y) < (LINES - 1);
+    return (p.y + s.y) < (LINES - 1); // If it's in bounds.
 }
-// Enemy.cpp
+
+
 void Enemy::update_enemy(std::vector<std::unique_ptr<Enemy>>& enemies, int step) {
     for (auto it = enemies.begin(); it != enemies.end(); ) {
         if (!(*it)->fall(step)) it = enemies.erase(it);

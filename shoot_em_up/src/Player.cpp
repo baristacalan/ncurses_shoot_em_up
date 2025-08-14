@@ -6,9 +6,6 @@ Player::Player(int h, int w, int y, int x, chtype chr1, chtype chr2)
     draw(h, w, y, x, chr1, chr2);
 }
 
-//void Player::move_left() { erase(); Entity::move_left();  draw(size.y, size.x, position.y, position.x); }
-//void Player::move_right() { erase(); Entity::move_right(); draw(size.y, size.x, position.y, position.x); }
-
 void Player::move_left(int speed) { erase(); Entity::move_left(speed);  redraw(1, 1); }
 void Player::move_right(int speed) { erase(); Entity::move_right(speed); redraw(1, 1); }
 
@@ -18,31 +15,54 @@ void Player::fire() {
     shoot_count++;
 }
 
+void Player::draw_bullets() const {
+
+    attron(A_BOLD);
+    for (const auto& bullet : bullets) {
+        mvaddch(bullet.position_b.y, bullet.position_b.x, '|');
+    }
+    attroff(A_BOLD);
+}
+//Update bullets
+//void Player::update_bullets() {
+//    for (auto it = bullets.begin(); it != bullets.end(); ) {
+//        
+//        if (it->position_b.y >= 0 && it->position_b.y < LINES &&
+//            it->position_b.x >= 0 && it->position_b.x < COLS)
+//            mvaddch(it->position_b.y, it->position_b.x, ' ');
+//        
+//        --it->position_b.y;
+//        
+//        if (it->position_b.y < 0) { it = bullets.erase(it); continue; }
+//        
+//        attron(A_BOLD);
+//        mvaddch(it->position_b.y, it->position_b.x, '|');
+//        attroff(A_BOLD);
+//        
+//        ++it;
+//    }
+//}
+
 void Player::update_bullets() {
     for (auto it = bullets.begin(); it != bullets.end(); ) {
-        
-        if (it->position_b.y >= 0 && it->position_b.y < LINES &&
-            it->position_b.x >= 0 && it->position_b.x < COLS)
-            mvaddch(it->position_b.y, it->position_b.x, ' ');
-        
-        --it->position_b.y;
-        
-        if (it->position_b.y < 0) { it = bullets.erase(it); continue; }
-        
-        attron(A_BOLD);
-        mvaddch(it->position_b.y, it->position_b.x, '|');
-        attroff(A_BOLD);
-        
-        ++it;
+        --it->position_b.y; // Move bullet up
+        if (it->position_b.y < 0) {
+            it = bullets.erase(it); // Erase if off-screen
+        }
+        else {
+            ++it;
+        }
     }
 }
 
-std::vector<Bullet>& Player::get_bullets() {
-    return bullets;
-}
+std::vector<Bullet>& Player::get_bullets() { return bullets; }
 
+int Player::get_shoot_count() const { return shoot_count;}
 
-int Player::get_shoot_count() const {
-    return shoot_count;
+int Player::get_score() const { return this->score;}
+
+void Player::set_score(int new_score) {
+
+    this->score = new_score;
 }
 

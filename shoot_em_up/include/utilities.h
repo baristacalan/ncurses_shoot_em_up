@@ -7,9 +7,6 @@
 #include <utility>
 #include <memory>
 #include <random>
-//#include <list>
-//#include <iostream>
-//#include <chrono>
 
 struct Points { int y, x;};
 
@@ -20,5 +17,15 @@ struct Rect {
 
 };
 
+
+enum COLORS : short {
+
+    CYAN = 1,
+    BLACK = 2,
+    RED = 3,
+    GREEN = 4,
+    YELLOW = 5
+
+};
 
 #endif // !UTILITIES_H
