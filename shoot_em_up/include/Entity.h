@@ -39,7 +39,4 @@ public:
     void   set_color(int pair) { color_pair = pair; }
 };
 
-
-
-
 #endif // !ENTITY_H

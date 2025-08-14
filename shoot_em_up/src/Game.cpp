@@ -121,6 +121,7 @@ void Game::game_over() {
         mvprintw(y + 2, (COLS - 25) / 2, "Press any key to exit...");
         refresh();
         getch();
+        //getch();
     }
 }
 
@@ -163,7 +164,7 @@ void Game::update() {
 
     if ((frame % 30) == 0) {
         int ew = 3, eh = 3;
-        enemies.emplace_back(std::make_unique<Enemy>(eh, ew, 1, rand_x(ew), 3, 0, 0));
+        enemies.emplace_back(std::make_unique<Enemy>(eh, ew, 0, rand_x(ew), 3, 0, 0));
     }
 
     if ((frame % 3) == 0)
