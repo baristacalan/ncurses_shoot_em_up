@@ -18,7 +18,6 @@ public:
 
     Player(int height, int width, int posy, int posx, chtype chr1, chtype chr2);
 
-    // inside the 'public:' section of the Player class
     std::vector<Bullet>& get_bullets();
 
 
