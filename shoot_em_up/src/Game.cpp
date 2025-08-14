@@ -63,8 +63,6 @@ namespace {
     }
 
     bool check_collision(const Points& pos1, const Points& size1, const Points& pos2, const Points& size2) {
-        // AABB collision detection
-        // Check for overlap on both X and Y axes
         return (pos1.x < pos2.x + size2.x && pos1.x + size1.x > pos2.x &&
             pos1.y < pos2.y + size2.y && pos1.y + size1.y > pos2.y);
     }
@@ -81,7 +79,7 @@ void Game::process_collisions() {
         bool enemy_destroyed = false;
         for (auto it_bullet = bullets.begin(); it_bullet != bullets.end(); ) {
             if (check_collision((*it_enemy)->get_position(), (*it_enemy)->get_size(), it_bullet->position_b, { 1, 1 })) {
-                //mvaddch(it_bullet->position_b.y, it_bullet->position_b.x, ' ');
+
                 it_bullet = bullets.erase(it_bullet);
                 it_enemy = enemies.erase(it_enemy);
                 enemy_destroyed = true;
