@@ -158,10 +158,6 @@ void Game::update() {
 
     player->update_bullets();
     
-    //enemy.fall();
-    //if ((frame % 60) == 0) enemies.emplace_back(std::make_unique<Enemy>(3, 6, 1, rand_x(6), 3));
-    //Enemy::UpdateAll(enemies, 1);
-
     if ((frame % 30) == 0) {
         int ew = 3, eh = 3;
         enemies.emplace_back(std::make_unique<Enemy>(eh, ew, 0, rand_x(ew), 3, 0, 0));
