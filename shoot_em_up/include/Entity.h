@@ -20,9 +20,9 @@ public:
     virtual ~Entity();
 
     // window lifecycle + drawing
-    void draw(int h, int w, int y, int x, chtype chr1, chtype chr2);
+    void draw(/*int h, int w, int y, int x,*/ chtype chr1=0, chtype chr2=0);
     void redraw(chtype chr1, chtype chr2);
-    void erase();
+    //void erase();
 
     // movement
     void set_position(int y, int x);

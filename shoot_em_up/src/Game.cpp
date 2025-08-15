@@ -4,7 +4,6 @@
 namespace {
 
 
-
     void init_curses() {
         
         initscr();
@@ -25,13 +24,15 @@ namespace {
         cbreak();
         nodelay(stdscr, true);
         curs_set(0);
+
+        leaveok(stdscr, true);
         refresh();
     }
 
     void process_input(int ch, Player& p) {
         switch (ch) {
-        case KEY_LEFT:  p.move_left(4);  break;
-        case KEY_RIGHT: p.move_right(4); break;
+        case KEY_LEFT:  p.set_moved(true); p.move_left(4); break;
+        case KEY_RIGHT: p.set_moved(true); p.move_right(4); break;
         case ' ':       p.fire();       break;
         default: break;
         }
@@ -131,8 +132,7 @@ void Game::run() {
     const int y = LINES - (h + 3);
     const int x = (COLS - w) / 2;
 
-    //Player player(h, w, y, x);
-    this->player = std::make_unique<Player>(h, w, y, x, 1, 1);
+    this->player = std::make_unique<Player>(h, w, y, x, 5, 5);
 
     while (is_running) {
         int ch = getch();
@@ -140,8 +140,6 @@ void Game::run() {
         if (ch != ERR) process_input(ch, *player);
 
         update();
-        //draw_hud(*player);
-        //refresh();
 
         render();
 
@@ -157,11 +155,11 @@ void Game::update() {
     player->update_bullets();
     
     if ((frame % 30) == 0) {
-        int ew = 3, eh = 3;
+        int ew = 4, eh = 3;
         enemies.emplace_back(std::make_unique<Enemy>(eh, ew, 0, rand_x(ew), 3, 0, 0));
     }
 
-    if ((frame % 3) == 0)
+    if ((frame % 4) == 0)
         Enemy::update_enemy(enemies, 2);
 
     process_collisions();
@@ -170,15 +168,13 @@ void Game::update() {
 
     if (frame == INT32_MAX) frame = 0;
 
-    //doupdate();
-
 }
 
 void Game::render() {
 
     erase(); 
-
-    player->redraw(1, 1);
+ 
+    player->redraw(5, 5);
 
     for (const auto& enemy : enemies) {
         enemy->redraw(0, 0);

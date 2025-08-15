@@ -7,10 +7,13 @@
 struct Bullet { Points position_b; Bullet(int y, int x) : position_b{ y,x } {} };
 
 class Player : public Entity {
-
+    
     std::vector<Bullet> bullets;
     int score{ 0 };
     int shoot_count{};
+    bool has_moved{};
+
+
 public:
     
     Player(const Player&) = delete;
@@ -32,6 +35,8 @@ public:
     int get_score() const;
     void set_score(int new_score);
 
+    int is_moved() const { return this->has_moved; }
+    void set_moved(bool move_status) { this->has_moved = move_status; }
 
 
     ~Player() override = default;

@@ -2,12 +2,12 @@
 #include "Player.h"
 
 Player::Player(int h, int w, int y, int x, chtype chr1, chtype chr2)
-    : Entity(h, w, y, x, /*color_pair*/1) {
-    draw(h, w, y, x, chr1, chr2);
+    : Entity(h, w, y, x, /*color_pair*/1), has_moved(false) {
+    draw(/*h, w, y, x,*/ chr1, chr2);
 }
 
-void Player::move_left(int speed) { erase(); Entity::move_left(speed);  redraw(1, 1); }
-void Player::move_right(int speed) { erase(); Entity::move_right(speed); redraw(1, 1); }
+void Player::move_left(int speed) { /*erase()*/; Entity::move_left(speed);  redraw(1, 1); this->has_moved = false; }
+void Player::move_right(int speed) { /*erase()*/; Entity::move_right(speed); redraw(1, 1); this->has_moved = false; }
 
 void Player::fire() {
     auto position_player = get_position(), size_player = get_size();
@@ -23,31 +23,14 @@ void Player::draw_bullets() const {
     }
     attroff(A_BOLD);
 }
-//Update bullets
-//void Player::update_bullets() {
-//    for (auto it = bullets.begin(); it != bullets.end(); ) {
-//        
-//        if (it->position_b.y >= 0 && it->position_b.y < LINES &&
-//            it->position_b.x >= 0 && it->position_b.x < COLS)
-//            mvaddch(it->position_b.y, it->position_b.x, ' ');
-//        
-//        --it->position_b.y;
-//        
-//        if (it->position_b.y < 0) { it = bullets.erase(it); continue; }
-//        
-//        attron(A_BOLD);
-//        mvaddch(it->position_b.y, it->position_b.x, '|');
-//        attroff(A_BOLD);
-//        
-//        ++it;
-//    }
-//}
 
 void Player::update_bullets() {
     for (auto it = bullets.begin(); it != bullets.end(); ) {
-        --it->position_b.y; // Move bullet up
+
+        //mvaddch(it->position_b.y, it->position_b.x, ' ');
+        --it->position_b.y;
         if (it->position_b.y < 0) {
-            it = bullets.erase(it); // Erase if off-screen
+            it = bullets.erase(it);
         }
         else {
             ++it;

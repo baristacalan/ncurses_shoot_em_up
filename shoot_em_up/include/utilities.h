@@ -4,7 +4,6 @@
 
 #include <curses.h>
 #include <vector>
-#include <utility>
 #include <memory>
 #include <random>
 
