@@ -17,6 +17,7 @@ namespace {
             init_pair(RED, COLOR_RED, -1);
             init_pair(GREEN, COLOR_GREEN, -1);
             init_pair(YELLOW, COLOR_YELLOW, -1);
+            init_pair(BLUE, COLOR_BLUE, -1);
         }
 
         keypad(stdscr, true);
@@ -81,10 +82,19 @@ void Game::process_collisions() {
         for (auto it_bullet = bullets.begin(); it_bullet != bullets.end(); ) {
             if (check_collision((*it_enemy)->get_position(), (*it_enemy)->get_size(), it_bullet->position_b, { 1, 1 })) {
 
+                Points enemy_pos = (*it_enemy)->get_position();
+                Points enemy_size = (*it_enemy)->get_size();
+
+                int explosion_x = enemy_pos.x + enemy_size.x / 2;
+                int explosion_y = enemy_pos.y + enemy_size.y / 2;
+
+
                 it_bullet = bullets.erase(it_bullet);
                 it_enemy = enemies.erase(it_enemy);
                 enemy_destroyed = true;
                 player->set_score(++score);
+                explosions.emplace_back(std::make_unique<Explosion>(explosion_y, explosion_x, BLUE));
+
                 break;
             }
             else {
@@ -127,7 +137,7 @@ void Game::game_over() {
 Game::Game() : is_running(true) { init_curses(); }
 
 void Game::run() {
-    const int kFrameMs = 16;
+    const int kFrameMs = 17;
     const int h = 4, w = 8;
     const int y = LINES - (h + 3);
     const int x = (COLS - w) / 2;
@@ -164,6 +174,13 @@ void Game::update() {
 
     process_collisions();
 
+    for (auto it = explosions.begin(); it != explosions.end();) {
+
+        if (!(*it)->update()) it = explosions.erase(it);
+        else ++it;
+    }
+
+
     ++frame;
 
     if (frame == INT32_MAX) frame = 0;
@@ -181,6 +198,10 @@ void Game::render() {
     }
 
     player->draw_bullets();
+
+    for (const auto& explosion : explosions) {
+        explosion->draw();
+    }
 
     draw_hud(*player);
 

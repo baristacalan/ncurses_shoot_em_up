@@ -23,8 +23,8 @@ enum COLORS : short {
     BLACK = 2,
     RED = 3,
     GREEN = 4,
-    YELLOW = 5
-
+    YELLOW = 5,
+    BLUE = 6
 };
 
 #endif // !UTILITIES_H

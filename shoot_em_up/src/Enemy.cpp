@@ -15,6 +15,8 @@ bool Enemy::fall(int step) {
 
 
 void Enemy::update_enemy(std::vector<std::unique_ptr<Enemy>>& enemies, int step) {
+
+
     for (auto it = enemies.begin(); it != enemies.end(); ) {
         if (!(*it)->fall(step)) it = enemies.erase(it);
         else ++it;

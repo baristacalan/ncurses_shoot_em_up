@@ -4,6 +4,7 @@
 
 #include "Player.h"
 #include "Enemy.h"
+#include "Explosion.h"
 
 
 class Game {
@@ -11,6 +12,7 @@ class Game {
     //Objects
     std::vector<std::unique_ptr<Enemy>> enemies;
     std::unique_ptr<Player> player;
+    std::vector<std::unique_ptr<Explosion>> explosions;
 
     
     //Functions

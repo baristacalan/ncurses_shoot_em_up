@@ -6,8 +6,9 @@ Player::Player(int h, int w, int y, int x, chtype chr1, chtype chr2)
     draw(/*h, w, y, x,*/ chr1, chr2);
 }
 
-void Player::move_left(int speed) { /*erase()*/; Entity::move_left(speed);  redraw(1, 1); this->has_moved = false; }
-void Player::move_right(int speed) { /*erase()*/; Entity::move_right(speed); redraw(1, 1); this->has_moved = false; }
+void Player::move_left(int speed) { Entity::move_left(speed); }
+
+void Player::move_right(int speed) { Entity::move_right(speed); }
 
 void Player::fire() {
     auto position_player = get_position(), size_player = get_size();

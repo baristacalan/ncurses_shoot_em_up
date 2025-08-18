@@ -21,7 +21,7 @@ public:
 
     // window lifecycle + drawing
     void draw(/*int h, int w, int y, int x,*/ chtype chr1=0, chtype chr2=0);
-    void redraw(chtype chr1, chtype chr2);
+    void redraw(chtype chr1=0, chtype chr2=0);
     //void erase();
 
     // movement

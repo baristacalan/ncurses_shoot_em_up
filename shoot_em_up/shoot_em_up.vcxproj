@@ -139,12 +139,14 @@ BearLibTerminal.lib;%(AdditionalDependencies)</AdditionalDependencies>
     <ClCompile Include="src\Entity.cpp" />
     <ClCompile Include="src\Game.cpp" />
     <ClCompile Include="src\main.cpp" />
+    <ClCompile Include="src\Explosion.cpp" />
     <ClCompile Include="src\Player.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\Enemy.h" />
     <ClInclude Include="include\Entity.h" />
     <ClInclude Include="include\Game.h" />
+    <ClInclude Include="include\Explosion.h" />
     <ClInclude Include="include\Player.h" />
     <ClInclude Include="include\utilities.h" />
   </ItemGroup>
