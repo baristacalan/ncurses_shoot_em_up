@@ -1,8 +1,8 @@
 #pragma once
 #include "Player.h"
 
-Player::Player(int h, int w, int y, int x, chtype chr1, chtype chr2)
-    : Entity(h, w, y, x, /*color_pair*/1){
+Player::Player(int h, int w, int y, int x, chtype chr1, chtype chr2, int color_pair)
+    : Entity(h, w, y, x, color_pair){
     draw(/*h, w, y, x,*/ chr1, chr2);
 }
 

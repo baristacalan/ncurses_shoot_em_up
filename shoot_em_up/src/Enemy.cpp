@@ -41,7 +41,7 @@ void Enemy::spawn_enemy(std::vector<std::unique_ptr<Enemy>>& enemies, int& frame
     //Controls spawn frequency
     if (frame % ENEMY_SPAWN_INTERVAL == 0) {
         int ew = 4, eh = 3;
-        enemies.emplace_back(std::make_unique<Enemy>(eh, ew, 0, rand_x(ew), 3, 0, 0));
+        enemies.emplace_back(std::make_unique<Enemy>(eh, ew, 0, rand_x(ew), BKG_RED, 0, 0));
     }
 }
 

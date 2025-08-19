@@ -3,7 +3,6 @@
 
 namespace {
 
-
     void init_curses() {
         
         initscr();
@@ -18,6 +17,9 @@ namespace {
             init_pair(GREEN, COLOR_GREEN, -1);
             init_pair(YELLOW, COLOR_YELLOW, -1);
             init_pair(BLUE, COLOR_BLUE, -1);
+            init_pair(BKG_YELLOW, -1, COLOR_YELLOW);
+            init_pair(BKG_RED, COLOR_WHITE, COLOR_RED);
+            init_pair(BKG_BLUE, COLOR_WHITE, COLOR_BLUE);
         }
 
         keypad(stdscr, true);
@@ -25,6 +27,7 @@ namespace {
         cbreak();
         nodelay(stdscr, true);
         curs_set(0);
+        bkgd(COLOR_PAIR(BKG_YELLOW));
 
         leaveok(stdscr, true);
         refresh();
@@ -98,6 +101,8 @@ void Game::process_collisions() {
                 int gained_point = rand_point();
                 score += gained_point;
                 player->set_score(score);
+
+                beep();
                 
                 explosions.emplace_back(std::make_unique<Explosion>(explosion_y, explosion_x, RED, gained_point));
 
@@ -137,6 +142,7 @@ GameState Game::game_over() {
         attroff(COLOR_PAIR(YELLOW) | A_BOLD);
 
         mvprintw(y + 3, (COLS - 40) / 2, "Press 'R' to Restart or ESC to exit...");
+        mvprintw(y + 5, (COLS - 7) / 2, "SCORE: %d", player->get_score());
         refresh();
        
         nodelay(stdscr, false);
@@ -159,7 +165,7 @@ GameState Game::run() {
     const int y = LINES - (h + 3);
     const int x = (COLS - w) / 2;
 
-    this->player = std::make_unique<Player>(h, w, y, x, 5, 5);
+    this->player = std::make_unique<Player>(h, w, y, x, 5, 5, BKG_BLUE);
 
     while (is_running) {
         int ch = getch();

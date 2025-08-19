@@ -3,6 +3,7 @@
 int main() {
 	
 	Game g;
+	
 	GameState state;
 
 	do {

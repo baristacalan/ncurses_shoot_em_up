@@ -24,7 +24,10 @@ enum COLORS : short {
     RED = 3,
     GREEN = 4,
     YELLOW = 5,
-    BLUE = 6
+    BLUE= 6,
+    BKG_YELLOW = 7,
+    BKG_RED = 8,
+    BKG_BLUE = 9
 };
 
 
