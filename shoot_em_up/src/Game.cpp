@@ -32,8 +32,8 @@ namespace {
 
     void process_input(int ch, Player& p) {
         switch (ch) {
-        case KEY_LEFT:  p.set_moved(true); p.move_left(4); break;
-        case KEY_RIGHT: p.set_moved(true); p.move_right(4); break;
+        case KEY_LEFT:  p.move_left(PLAYER_MOVE_SPEED); break;
+        case KEY_RIGHT: p.move_right(PLAYER_MOVE_SPEED); break;
         case ' ':       p.fire();       break;
         default: break;
         }
@@ -47,20 +47,25 @@ namespace {
         attron(COLOR_PAIR(CYAN) | A_BOLD);
         mvprintw(0, 0, "X:%d Y:%d  ", pos.x, pos.y);
         attroff(COLOR_PAIR(CYAN) | A_BOLD);
-
-        attron(COLOR_PAIR(RED) | A_BOLD);
         
+        attron(COLOR_PAIR(RED) | A_BOLD);
         mvprintw(0, COLS - 23, "SHOTS COUNT: %d", shot_count);
         attroff(COLOR_PAIR(RED) | A_BOLD);
         
         attron(COLOR_PAIR(GREEN) | A_BOLD);
         mvprintw(1, COLS - 23, "SCORE: %d", p.get_score());
         attroff(COLOR_PAIR(GREEN) | A_BOLD);
+
     }
     
-    int rand_x(int w) {
+
+
+
+    int rand_point() {
+
         static std::mt19937 rng{ std::random_device{}() };
-        std::uniform_int_distribution<int> dist(1, COLS - w - 1);
+        std::uniform_int_distribution<int> dist(1, 10);
+
         return dist(rng);
     }
 
@@ -92,8 +97,12 @@ void Game::process_collisions() {
                 it_bullet = bullets.erase(it_bullet);
                 it_enemy = enemies.erase(it_enemy);
                 enemy_destroyed = true;
-                player->set_score(++score);
-                explosions.emplace_back(std::make_unique<Explosion>(explosion_y, explosion_x, BLUE));
+                //player->set_score(++score);
+                int gained_point = rand_point();
+                score += gained_point;
+                player->set_score(score);
+                
+                explosions.emplace_back(std::make_unique<Explosion>(explosion_y, explosion_x, RED, gained_point));
 
                 break;
             }
@@ -137,8 +146,8 @@ void Game::game_over() {
 Game::Game() : is_running(true) { init_curses(); }
 
 void Game::run() {
-    const int kFrameMs = 17;
-    const int h = 4, w = 8;
+    const int FRAME_MS = 17;
+    const int h = 3, w = 6;
     const int y = LINES - (h + 3);
     const int x = (COLS - w) / 2;
 
@@ -153,7 +162,7 @@ void Game::run() {
 
         render();
 
-        napms(kFrameMs);
+        napms(FRAME_MS);
     }
 
     game_over();
@@ -164,13 +173,10 @@ void Game::update() {
 
     player->update_bullets();
     
-    if ((frame % 30) == 0) {
-        int ew = 4, eh = 3;
-        enemies.emplace_back(std::make_unique<Enemy>(eh, ew, 0, rand_x(ew), 3, 0, 0));
-    }
+    //Spawn frequency
+    Enemy::spawn_enemy(enemies, frame);
 
-    if ((frame % 4) == 0)
-        Enemy::update_enemy(enemies, 2);
+    Enemy::update_enemy(enemies, frame, ENEMY_FALL_SPEED);
 
     process_collisions();
 
@@ -187,15 +193,21 @@ void Game::update() {
 
 }
 
+//Clears screen, draws player, enemies, bullets and explosions every time it is called.
+
 void Game::render() {
 
     erase(); 
  
     player->redraw(5, 5);
 
+
+    //Loops through enemies vector and draws.
     for (const auto& enemy : enemies) {
         enemy->redraw(0, 0);
     }
+
+
 
     player->draw_bullets();
 

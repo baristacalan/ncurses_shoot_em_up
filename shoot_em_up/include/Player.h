@@ -11,7 +11,7 @@ class Player : public Entity {
     std::vector<Bullet> bullets;
     int score{ 0 };
     int shoot_count{};
-    bool has_moved{};
+    //bool has_moved{};
 
 
 public:
@@ -35,8 +35,9 @@ public:
     int get_score() const;
     void set_score(int new_score);
 
-    int is_moved() const { return this->has_moved; }
-    void set_moved(bool move_status) { this->has_moved = move_status; }
+
+    //int is_moved() const { return this->has_moved; }
+    //void set_moved(bool move_status) { this->has_moved = move_status; }
 
 
     ~Player() override = default;

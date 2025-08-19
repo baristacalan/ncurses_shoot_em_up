@@ -2,7 +2,7 @@
 #include "Player.h"
 
 Player::Player(int h, int w, int y, int x, chtype chr1, chtype chr2)
-    : Entity(h, w, y, x, /*color_pair*/1), has_moved(false) {
+    : Entity(h, w, y, x, /*color_pair*/1){
     draw(/*h, w, y, x,*/ chr1, chr2);
 }
 
@@ -18,11 +18,11 @@ void Player::fire() {
 
 void Player::draw_bullets() const {
 
-    attron(A_BOLD);
+    attron(A_BOLD | COLOR_PAIR(BLUE));
     for (const auto& bullet : bullets) {
         mvaddch(bullet.position_b.y, bullet.position_b.x, '|');
     }
-    attroff(A_BOLD);
+    attroff(A_BOLD | COLOR_PAIR(BLUE));
 }
 
 void Player::update_bullets() {

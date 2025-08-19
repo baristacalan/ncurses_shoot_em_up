@@ -27,4 +27,11 @@ enum COLORS : short {
     BLUE = 6
 };
 
+
+constexpr int PLAYER_MOVE_SPEED = 4;
+constexpr int ENEMY_SPAWN_INTERVAL = 30; // in frames
+constexpr int ENEMY_MOVE_INTERVAL = 4;   // in frames
+constexpr int ENEMY_FALL_SPEED = 2;
+
+
 #endif // !UTILITIES_H
