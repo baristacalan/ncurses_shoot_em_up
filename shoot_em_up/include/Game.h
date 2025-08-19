@@ -7,6 +7,14 @@
 #include "Explosion.h"
 
 
+enum class GameState {
+
+    PLAYING,
+    RESTART,
+    EXIT
+};
+
+
 class Game {
     
     //Objects
@@ -14,7 +22,8 @@ class Game {
     std::unique_ptr<Player> player;
     std::vector<std::unique_ptr<Explosion>> explosions;
 
-    
+
+
     //Functions
     void update();
     void render();
@@ -26,13 +35,14 @@ class Game {
     int frame{ 0 };
 
 
-    void game_over();
+    GameState game_over();
 
 
 public:
     Game();
 
-    void run();
+    GameState run();
+    void reset();
 
     ~Game();
 };

@@ -58,9 +58,6 @@ namespace {
 
     }
     
-
-
-
     int rand_point() {
 
         static std::mt19937 rng{ std::random_device{}() };
@@ -122,9 +119,14 @@ void Game::process_collisions() {
     }
 }
 
-void Game::game_over() {
+//Checks if the player alive. If so, clears screen and prints game over
+
+GameState Game::game_over() {
+    
     if (!player->is_alive()) {
         erase();
+
+        int ch{};
 
         const char* msg = "GAME OVER!";
         int y = LINES / 2;
@@ -134,18 +136,24 @@ void Game::game_over() {
         mvprintw(y, x, msg);
         attroff(COLOR_PAIR(YELLOW) | A_BOLD);
 
-        nodelay(stdscr, false);
-
-        mvprintw(y + 2, (COLS - 25) / 2, "Press any key to exit...");
+        mvprintw(y + 3, (COLS - 40) / 2, "Press 'R' to Restart or ESC to exit...");
         refresh();
-        getch();
-        //getch();
+       
+        nodelay(stdscr, false);
+        do {
+            ch = getch();
+        } while ((ch != 'R') && (ch != 'r') && (ch != 27));
+        nodelay(stdscr, true);
+
+        if (ch == 'R' || ch == 'r') return GameState::RESTART;
     }
+
+    return GameState::EXIT;
 }
 
 Game::Game() : is_running(true) { init_curses(); }
 
-void Game::run() {
+GameState Game::run() {
     const int FRAME_MS = 17;
     const int h = 3, w = 6;
     const int y = LINES - (h + 3);
@@ -155,7 +163,10 @@ void Game::run() {
 
     while (is_running) {
         int ch = getch();
-        if (ch == 27) break;
+        if (ch == 27) {
+            is_running = false;
+            break;
+        }
         if (ch != ERR) process_input(ch, *player);
 
         update();
@@ -165,8 +176,21 @@ void Game::run() {
         napms(FRAME_MS);
     }
 
-    game_over();
+    return game_over();
     
+}
+
+void Game::reset() {
+
+    explosions.clear();
+    enemies.clear();
+
+    player->set_alive_status(true);
+    player->set_score(0);
+
+    is_running = true;
+    frame = 0;
+
 }
 
 void Game::update() {
