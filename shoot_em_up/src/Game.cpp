@@ -3,6 +3,7 @@
 
 namespace {
 
+    //Initializes curses and sets up necessary attributes.
     void init_curses() {
         
         initscr();
@@ -17,30 +18,33 @@ namespace {
             init_pair(GREEN, COLOR_GREEN, -1);
             init_pair(YELLOW, COLOR_YELLOW, -1);
             init_pair(BLUE, COLOR_BLUE, -1);
-            init_pair(BKG_YELLOW, -1, COLOR_YELLOW);
-            init_pair(BKG_RED, COLOR_WHITE, COLOR_RED);
-            init_pair(BKG_BLUE, COLOR_WHITE, COLOR_BLUE);
+            init_pair(BKG_YELLOW, COLOR_YELLOW, COLOR_YELLOW);
+            init_pair(BKG_RED, COLOR_RED, COLOR_RED);
+            init_pair(BKG_BLUE, COLOR_BLACK, COLOR_BLUE);
         }
 
-        keypad(stdscr, true);
+        keypad(stdscr, true); //Enables whole keyboard
         noecho();
-        cbreak();
-        nodelay(stdscr, true);
+        cbreak(); //Gets input immediately, without pressing enter.
+        nodelay(stdscr, true); // Allows asynchronous
         curs_set(0);
-        bkgd(COLOR_PAIR(BKG_YELLOW));
+        //bkgd(COLOR_PAIR(BKG_YELLOW));
 
         leaveok(stdscr, true);
         refresh();
     }
 
-    void process_input(int ch, Player& p) {
+ /*   void handle_input(int ch, Player& p) {
         switch (ch) {
-        case KEY_LEFT:  p.move_left(PLAYER_MOVE_SPEED); break;
+        case KEY_LEFT:  p.move_left(PLAYER_MOVE_SPEED);  break;
         case KEY_RIGHT: p.move_right(PLAYER_MOVE_SPEED); break;
-        case ' ':       p.fire();       break;
+        case ' ':       p.fire();                        break;
+
         default: break;
+        
+        
         }
-    }
+    }*/
 
     void draw_hud(const Player& p) {
         auto pos = p.get_position();
@@ -74,7 +78,35 @@ namespace {
             pos1.y < pos2.y + size2.y && pos1.y + size1.y > pos2.y);
     }
 
+
 } // namespace
+
+
+Game::Game() : is_running(true), is_paused(false), frame(0) { init_curses(); } //Game class ctor.
+
+void Game::handle_input(int ch) {
+
+    if (is_paused && ch != 112 && ch != 27) {
+        ch = ERR;
+        return;
+    }
+
+    switch (ch) {
+    
+    case KEY_LEFT:  player->move_left(PLAYER_MOVE_SPEED);  break;
+    
+    case KEY_RIGHT: player->move_right(PLAYER_MOVE_SPEED); break;
+    
+    case ' ':       player->fire();                        break;
+    
+    case 27:        is_running = false;                    break; // 27 = ESC
+
+    case 112:      toggle_pause(); break; // 112 = 'p'
+
+    default: break;
+
+    }
+}
 
 void Game::process_collisions() {
 
@@ -135,7 +167,7 @@ GameState Game::game_over() {
 
         const char* msg = "GAME OVER!";
         int y = LINES / 2;
-        int x = (COLS - strlen(msg)) / 2;
+        int x = (COLS - 10) / 2;
 
         attron(COLOR_PAIR(YELLOW) | A_BOLD);
         mvprintw(y, x, msg);
@@ -157,7 +189,29 @@ GameState Game::game_over() {
     return GameState::EXIT;
 }
 
-Game::Game() : is_running(true) { init_curses(); }
+void Game::toggle_pause() {
+   
+    is_paused = !is_paused;
+
+}
+
+void Game::display_pause_menu() {
+
+    int mh{ 13 }, mw{30};
+
+    WINDOW* menu_box = newwin(mh, mw, (LINES - mh) / 2, (COLS - mw) / 2);
+    wbkgd(menu_box, COLOR_PAIR(BLACK));
+
+    attron(COLOR_PAIR(BLACK) | A_BOLD);
+    mvwprintw(menu_box, (mh) / 2, (mw - 6) /2, "PAUSED");
+    mvwprintw(menu_box, mh / 2 + 2, (mw - 24) / 2, "PRESS P TO CONTINUE...");
+    attroff(COLOR_PAIR(BLACK) | A_BOLD);
+
+    wnoutrefresh(menu_box);
+
+    delwin(menu_box);
+}
+
 
 GameState Game::run() {
     const int FRAME_MS = 17;
@@ -169,11 +223,13 @@ GameState Game::run() {
 
     while (is_running) {
         int ch = getch();
-        if (ch == 27) {
+        /*if (ch == 27) {
             is_running = false;
             break;
-        }
-        if (ch != ERR) process_input(ch, *player);
+        }*/
+        //if (ch != ERR) handle_input(ch, *player);
+        if (ch != ERR) handle_input(ch);
+
 
         update();
 
@@ -201,6 +257,8 @@ void Game::reset() {
 
 void Game::update() {
 
+    if (is_paused) return;
+
     player->update_bullets();
     
     //Spawn frequency
@@ -227,7 +285,9 @@ void Game::update() {
 
 void Game::render() {
 
-    erase(); 
+
+    if(!is_paused) erase();
+
  
     player->redraw(5, 5);
 
@@ -238,7 +298,6 @@ void Game::render() {
     }
 
 
-
     player->draw_bullets();
 
     for (const auto& explosion : explosions) {
@@ -246,6 +305,9 @@ void Game::render() {
     }
 
     draw_hud(*player);
+
+    if (is_paused) display_pause_menu();
+
 
     doupdate();
 }

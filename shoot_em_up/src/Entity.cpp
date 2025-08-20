@@ -26,11 +26,6 @@ void Entity::redraw(chtype chr1, chtype chr2) {
     wnoutrefresh(object);
 }
 
-//void Entity::erase() {
-//    if (!object) return;
-//    werase(object);
-//    wnoutrefresh(object);
-//}
 
 void Entity::set_position(int y, int x) {
     position = { y,x };

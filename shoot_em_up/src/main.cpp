@@ -1,5 +1,6 @@
 #include <Game.h>
 
+
 int main() {
 	
 	Game g;
@@ -13,7 +14,10 @@ int main() {
 			g.reset();
 		}
 
+
 	} while (state == GameState::RESTART);
+
+
 
 
 	return 0;

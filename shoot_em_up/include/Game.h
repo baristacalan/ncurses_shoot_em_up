@@ -11,7 +11,8 @@ enum class GameState {
 
     PLAYING,
     RESTART,
-    EXIT
+    EXIT,
+    PAUSE
 };
 
 
@@ -28,14 +29,17 @@ class Game {
     void update();
     void render();
     void process_collisions();
+    void handle_input(int ch);
 
 
     //Variables
-    bool is_running{ true };
-    int frame{ 0 };
-
+    bool is_running;
+    int frame;
+    bool is_paused;
 
     GameState game_over();
+    void toggle_pause();
+    void display_pause_menu();
 
 
 public:
