@@ -13,7 +13,7 @@ void Player::move_right(int speed) { Entity::move_right(speed); }
 void Player::fire() {
     auto position_player = get_position(), size_player = get_size();
     bullets.push_back({ position_player.y - 1, position_player.x + size_player.x / 2 });
-    shoot_count++;
+    total_shoot_count++;
 }
 
 void Player::draw_bullets() const {
@@ -41,7 +41,7 @@ void Player::update_bullets() {
 
 std::vector<Bullet>& Player::get_bullets() { return bullets; }
 
-int Player::get_shoot_count() const { return shoot_count;}
+int Player::get_total_shot_count() const { return total_shoot_count;}
 
 int Player::get_score() const { return this->score;}
 

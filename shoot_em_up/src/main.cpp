@@ -18,7 +18,5 @@ int main() {
 	} while (state == GameState::RESTART);
 
 
-
-
 	return 0;
 }

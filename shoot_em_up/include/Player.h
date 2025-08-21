@@ -10,8 +10,8 @@ class Player : public Entity {
     
     std::vector<Bullet> bullets;
     int score{ 0 };
-    int shoot_count{};
-    //bool has_moved{};
+    int total_shoot_count{0};
+    int successful_shots{0};
 
 
 public:
@@ -30,15 +30,13 @@ public:
     void draw_bullets() const;
     void update_bullets();
 
-    int get_shoot_count() const;
+    int get_total_shot_count() const;
+    int get_successful_shots() const { return this->successful_shots; };
+    void set_successful_shots(int shots) { this->successful_shots = shots; };
+
 
     int get_score() const;
     void set_score(int new_score);
-
-
-    //int is_moved() const { return this->has_moved; }
-    //void set_moved(bool move_status) { this->has_moved = move_status; }
-
 
     ~Player() override = default;
 };

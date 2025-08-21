@@ -40,6 +40,7 @@ class Game {
     GameState game_over();
     void toggle_pause();
     void display_pause_menu();
+    void draw_hud();
 
 
 public:

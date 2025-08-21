@@ -33,37 +33,6 @@ namespace {
         leaveok(stdscr, true);
         refresh();
     }
-
- /*   void handle_input(int ch, Player& p) {
-        switch (ch) {
-        case KEY_LEFT:  p.move_left(PLAYER_MOVE_SPEED);  break;
-        case KEY_RIGHT: p.move_right(PLAYER_MOVE_SPEED); break;
-        case ' ':       p.fire();                        break;
-
-        default: break;
-        
-        
-        }
-    }*/
-
-    void draw_hud(const Player& p) {
-        auto pos = p.get_position();
-        int shot_count = p.get_shoot_count();
-
-
-        attron(COLOR_PAIR(CYAN) | A_BOLD);
-        mvprintw(0, 0, "X:%d Y:%d  ", pos.x, pos.y);
-        attroff(COLOR_PAIR(CYAN) | A_BOLD);
-        
-        attron(COLOR_PAIR(RED) | A_BOLD);
-        mvprintw(0, COLS - 23, "SHOTS COUNT: %d", shot_count);
-        attroff(COLOR_PAIR(RED) | A_BOLD);
-        
-        attron(COLOR_PAIR(GREEN) | A_BOLD);
-        mvprintw(1, COLS - 23, "SCORE: %d", p.get_score());
-        attroff(COLOR_PAIR(GREEN) | A_BOLD);
-
-    }
     
     int rand_point() {
 
@@ -114,6 +83,9 @@ void Game::process_collisions() {
 
     int score = player->get_score();
 
+    int success_shots = player->get_successful_shots();
+
+
     for (auto it_enemy = enemies.begin(); it_enemy != enemies.end(); ) {
         bool enemy_destroyed = false;
         for (auto it_bullet = bullets.begin(); it_bullet != bullets.end(); ) {
@@ -129,14 +101,14 @@ void Game::process_collisions() {
                 it_bullet = bullets.erase(it_bullet);
                 it_enemy = enemies.erase(it_enemy);
                 enemy_destroyed = true;
-                //player->set_score(++score);
                 int gained_point = rand_point();
                 score += gained_point;
+                player->set_successful_shots(++success_shots);
                 player->set_score(score);
 
-                beep();
-                
                 explosions.emplace_back(std::make_unique<Explosion>(explosion_y, explosion_x, RED, gained_point));
+
+                beep();
 
                 break;
             }
@@ -212,24 +184,48 @@ void Game::display_pause_menu() {
     delwin(menu_box);
 }
 
+void Game::draw_hud() {
+
+    Points pos = player->get_position();
+    int shot_count = player->get_total_shot_count();
+
+    int score = player->get_score();
+    int success_shots = player->get_successful_shots();
+
+    attron(COLOR_PAIR(CYAN) | A_BOLD);
+    mvprintw(0, 0, "X:%d Y:%d  ", pos.x, pos.y);
+    attroff(COLOR_PAIR(CYAN) | A_BOLD);
+
+    attron(COLOR_PAIR(RED) | A_BOLD);
+    mvprintw(0, COLS - 23, "SHOTS COUNT: %d", shot_count);
+    attroff(COLOR_PAIR(RED) | A_BOLD);
+
+    attron(COLOR_PAIR(GREEN) | A_BOLD);
+    mvprintw(1, COLS - 23, "SCORE: %d", score);
+    attroff(COLOR_PAIR(GREEN) | A_BOLD);
+    
+    attron(COLOR_PAIR(BLUE) | A_BOLD);
+    mvprintw(2, COLS - 23, "SUCCESSFUL SHOTS: %d", success_shots);
+    attroff(COLOR_PAIR(BLUE) | A_BOLD);
+
+
+}
+
 
 GameState Game::run() {
+    
     const int FRAME_MS = 17;
-    const int h = 3, w = 6;
-    const int y = LINES - (h + 3);
-    const int x = (COLS - w) / 2;
+    const int player_h = 3, player_w = 6;
+    const int player_posy = LINES - (player_h + 3);
+    const int player_posx = (COLS - player_w) / 2;
 
-    this->player = std::make_unique<Player>(h, w, y, x, 5, 5, BKG_BLUE);
+    this->player = std::make_unique<Player>(player_h, player_w, player_posy, player_posx, 5, 5, BKG_BLUE);
 
-    while (is_running) {
+    while (this->is_running) {
+
         int ch = getch();
-        /*if (ch == 27) {
-            is_running = false;
-            break;
-        }*/
-        //if (ch != ERR) handle_input(ch, *player);
-        if (ch != ERR) handle_input(ch);
 
+        if (ch != ERR) handle_input(ch);
 
         update();
 
@@ -246,6 +242,7 @@ void Game::reset() {
 
     explosions.clear();
     enemies.clear();
+    //player.reset();
 
     player->set_alive_status(true);
     player->set_score(0);
@@ -257,7 +254,7 @@ void Game::reset() {
 
 void Game::update() {
 
-    if (is_paused) return;
+    if (this->is_paused) return;
 
     player->update_bullets();
     
@@ -287,8 +284,7 @@ void Game::render() {
 
 
     if(!is_paused) erase();
-
- 
+    
     player->redraw(5, 5);
 
 
@@ -304,12 +300,14 @@ void Game::render() {
         explosion->draw();
     }
 
-    draw_hud(*player);
+    draw_hud();
 
     if (is_paused) display_pause_menu();
 
 
     doupdate();
+
+   
 }
 
 Game::~Game() {

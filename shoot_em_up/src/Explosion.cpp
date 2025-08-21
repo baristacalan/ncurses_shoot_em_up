@@ -1,7 +1,7 @@
 #include "Explosion.h"
 
 
-Explosion::Explosion(int start_y, int start_x, int color, int& score) :  lifetime(8), frame_counter(0), recent_score_gain(score){
+Explosion::Explosion(int start_y, int start_x, int color, int& score) :  lifetime(4), frame_counter(0), recent_score_gain(score){
 
 	particles.push_back({ {start_y, start_x}, {1, 1}, {color} });
 	particles.push_back({ {start_y, start_x}, {1, -1}, {color} });
@@ -16,18 +16,19 @@ bool Explosion::update() {
 	if (frame_counter == INT32_MAX) frame_counter = 0;
 
 
-	if (frame_counter % 3 == 0) {
+	if (frame_counter % 4 == 0) {
 
 		for (auto& p : particles) {
 
 			p.position.x += p.velocity.x;
 			p.position.y += p.velocity.y;
 		}
+		
+		lifetime--;
+		
 	}
 
-
 	++frame_counter;
-	lifetime--;
 
 	return lifetime > 0;
 
