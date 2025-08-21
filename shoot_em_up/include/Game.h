@@ -46,7 +46,7 @@ class Game {
 
     void toggle_pause();
     void display_pause_menu();
-    void display_start_menu(int option);
+    void display_start_menu(const int& current_selection);
 
     void draw_hud();
 

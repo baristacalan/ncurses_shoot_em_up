@@ -27,7 +27,7 @@ namespace {
         noecho();
         cbreak(); //Gets input immediately, without pressing enter.
         nodelay(stdscr, true); // Allows asynchronous
-        curs_set(0);
+        curs_set(0); //Turns off cursor.
         //bkgd(COLOR_PAIR(BKG_YELLOW));
 
         leaveok(stdscr, true);
@@ -73,7 +73,7 @@ void Game::run() {
         }
 
         else if (current_state == GameState::RESTART) {
-            reset();
+            this->reset();
             current_state = GameState::PLAYING;
         }
 
@@ -118,6 +118,14 @@ void Game::process_collisions() {
         bool enemy_destroyed = false;
         for (auto it_bullet = bullets.begin(); it_bullet != bullets.end(); ) {
             if (check_collision((*it_enemy)->get_position(), (*it_enemy)->get_size(), it_bullet->position_b, { 1, 1 })) {
+
+
+                if ((*it_enemy)->get_color() == BKG_RED) {
+
+                    this->is_running = false;
+                    player->set_alive_status(false);
+                    break;
+                }
 
                 Points enemy_pos = (*it_enemy)->get_position();
                 Points enemy_size = (*it_enemy)->get_size();
@@ -211,7 +219,7 @@ void Game::display_pause_menu() {
     delwin(menu_box);
 }
 
-void Game::display_start_menu(int selected) {
+void Game::display_start_menu(const int& current_selection) {
     
     const int mh = 15, mw = 40;
     WINDOW* start_menu = newwin(mh, mw, (LINES - mh) / 2, (COLS - mw) / 2);
@@ -220,22 +228,15 @@ void Game::display_start_menu(int selected) {
     WINDOW* play_bar = derwin(start_menu, 3, mw - 4, 3, 2);
     WINDOW* exit_bar = derwin(start_menu, 3, mw - 4, 7, 2);
 
-    if (selected == -1) wbkgd(play_bar, COLOR_PAIR(BLACK));
-
-    else if (selected == KEY_UP) {
-        wbkgd(exit_bar, 0);
-        wbkgd(play_bar, COLOR_PAIR(BLACK)); 
-        
+    if (current_selection == 0) {
+        wbkgd(play_bar, COLOR_PAIR(BLACK)); // Highlighted
+        wbkgd(exit_bar, 0);                 // Not highlighted
     }
-
-    else if (selected == KEY_DOWN) {
-        
-        wbkgd(play_bar, 0);
-        wbkgd(exit_bar, COLOR_PAIR(BLACK));
-    
+    else { 
+        wbkgd(play_bar, 0); //Highlight exit bar                 
+        wbkgd(exit_bar, COLOR_PAIR(BLACK)); 
     }
     
-    //wbkgd(play_bar, COLOR_PAIR(BLACK));
     box(play_bar, 0, 0);
     mvwprintw(play_bar, 1, (mw - 4 - 4) / 2, "PLAY");
 
@@ -254,85 +255,46 @@ void Game::display_start_menu(int selected) {
 
 GameState Game::main_menu_loop() {
 
-    nodelay(stdscr, false);
+    nodelay(stdscr, false); //Block until user input
 
-    int selection = -1;
-    int pressed{-1};
+    int current_selection = 0;
+    int key_pressed{};
 
-    display_start_menu(selection);
-    doupdate();
     while (true) {
 
-        //timeout(-1);
-        //selection = getch();
-        //
+        display_start_menu(current_selection);
+        doupdate();
 
-        //if (selection == KEY_UP) {
-        //    display_start_menu(selection);
-        //}
-
-        //else if (selection == KEY_DOWN) {
-        //    display_start_menu(selection);
-
-        //}
-
-        //else if (selection == 27) return GameState::EXIT;
-
-        //doupdate();
-
-        //timeout(1000);
-        //pressed = getch();
-        //
-        //if (pressed == ERR) printw("Test");
-
-        //if ((pressed == ' ' || pressed == '\n') && selection == KEY_UP) {
-        //    nodelay(stdscr, true);
-        //    return GameState::PLAYING;
-        //}
-
-        //else if ((pressed == ' ' || pressed == '\n') && selection == KEY_DOWN) {
-        //    return GameState::EXIT;
-        //}
-
-        selection = getch();
-
-        switch (selection) {
+        key_pressed = getch();
         
-        
-        case '\n':
-        case ' ':
-            nodelay(stdscr, true);
-            return GameState::PLAYING;
-         
-        case 27: //ESC ch
-
-
-            return GameState::EXIT;
+        switch (key_pressed) {
 
         case KEY_UP:
-            display_start_menu(selection);
+            if (current_selection == 1) {
+                current_selection = 0;
+            }
             break;
-
         case KEY_DOWN:
-            display_start_menu(selection);
+            if (current_selection == 0) {
+                current_selection = 1;
+            }
             break;
 
-        default:
-
+        case ' ':
+        case '\n':
+            if (current_selection == 0) {
+                nodelay(stdscr, true);
+                return GameState::PLAYING;
+            }
+            else if (current_selection == 1) {
+                return GameState::EXIT;
+            }
             break;
+        case 27: //ESC
+            return GameState::EXIT;
         }
 
-
     }
-
-
-}
-
-
-GameState Game::test() {
-
-    nodelay(stdscr, false);
-
 
 }
 

@@ -6,6 +6,7 @@
 
 class Enemy : public Entity {
 
+
 public:
     Enemy(int h = 6, int w = 3, int y = 1, int x = COLS / 2, int cp = BKG_RED, chtype chr1 = 0, chtype chr2 = 0);
 
