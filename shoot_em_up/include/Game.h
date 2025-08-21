@@ -8,11 +8,11 @@
 
 
 enum class GameState {
-
+    
+    MAIN_MENU,
     PLAYING,
     RESTART,
     EXIT,
-    PAUSE
 };
 
 
@@ -37,16 +37,25 @@ class Game {
     int frame;
     bool is_paused;
 
+
+    GameState game_loop();
+    GameState main_menu_loop();
     GameState game_over();
+
+    GameState test();
+
     void toggle_pause();
     void display_pause_menu();
+    void display_start_menu(int option);
+
     void draw_hud();
 
 
 public:
     Game();
 
-    GameState run();
+    void run();
+
     void reset();
 
     ~Game();

@@ -51,7 +51,35 @@ namespace {
 } // namespace
 
 
+
+
 Game::Game() : is_running(true), is_paused(false), frame(0) { init_curses(); } //Game class ctor.
+
+void Game::run() {
+
+    GameState current_state = GameState::MAIN_MENU;
+
+    while (current_state != GameState::EXIT) {
+
+
+        if (current_state == GameState::MAIN_MENU) {
+            current_state = main_menu_loop();
+        }
+
+
+        else if (current_state == GameState::PLAYING) {
+
+            current_state = game_loop();
+        }
+
+        else if (current_state == GameState::RESTART) {
+            reset();
+            current_state = GameState::PLAYING;
+        }
+
+    }
+
+}
 
 void Game::handle_input(int ch) {
 
@@ -108,7 +136,7 @@ void Game::process_collisions() {
 
                 explosions.emplace_back(std::make_unique<Explosion>(explosion_y, explosion_x, RED, gained_point));
 
-                beep();
+                //beep();
 
                 break;
             }
@@ -129,7 +157,6 @@ void Game::process_collisions() {
 }
 
 //Checks if the player alive. If so, clears screen and prints game over
-
 GameState Game::game_over() {
     
     if (!player->is_alive()) {
@@ -169,19 +196,144 @@ void Game::toggle_pause() {
 
 void Game::display_pause_menu() {
 
-    int mh{ 13 }, mw{30};
+    int mh{ 15 }, mw{40};
 
     WINDOW* menu_box = newwin(mh, mw, (LINES - mh) / 2, (COLS - mw) / 2);
     wbkgd(menu_box, COLOR_PAIR(BLACK));
 
     attron(COLOR_PAIR(BLACK) | A_BOLD);
     mvwprintw(menu_box, (mh) / 2, (mw - 6) /2, "PAUSED");
-    mvwprintw(menu_box, mh / 2 + 2, (mw - 24) / 2, "PRESS P TO CONTINUE...");
+    mvwprintw(menu_box, mh / 2 + 2, (mw - 23) / 2, "PRESS P TO CONTINUE...");
     attroff(COLOR_PAIR(BLACK) | A_BOLD);
 
     wnoutrefresh(menu_box);
 
     delwin(menu_box);
+}
+
+void Game::display_start_menu(int selected) {
+    
+    const int mh = 15, mw = 40;
+    WINDOW* start_menu = newwin(mh, mw, (LINES - mh) / 2, (COLS - mw) / 2);
+    box(start_menu, 0, 0);
+
+    WINDOW* play_bar = derwin(start_menu, 3, mw - 4, 3, 2);
+    WINDOW* exit_bar = derwin(start_menu, 3, mw - 4, 7, 2);
+
+    if (selected == -1) wbkgd(play_bar, COLOR_PAIR(BLACK));
+
+    else if (selected == KEY_UP) {
+        wbkgd(exit_bar, 0);
+        wbkgd(play_bar, COLOR_PAIR(BLACK)); 
+        
+    }
+
+    else if (selected == KEY_DOWN) {
+        
+        wbkgd(play_bar, 0);
+        wbkgd(exit_bar, COLOR_PAIR(BLACK));
+    
+    }
+    
+    //wbkgd(play_bar, COLOR_PAIR(BLACK));
+    box(play_bar, 0, 0);
+    mvwprintw(play_bar, 1, (mw - 4 - 4) / 2, "PLAY");
+
+    box(exit_bar, 0, 0);
+    mvwprintw(exit_bar, 1, (mw - 4 - 4) / 2, "EXIT");
+
+    wnoutrefresh(start_menu);
+    wnoutrefresh(play_bar);
+    wnoutrefresh(exit_bar);
+
+    delwin(exit_bar);
+    delwin(start_menu);
+    delwin(play_bar);
+
+}
+
+GameState Game::main_menu_loop() {
+
+    nodelay(stdscr, false);
+
+    int selection = -1;
+    int pressed{-1};
+
+    display_start_menu(selection);
+    doupdate();
+    while (true) {
+
+        //timeout(-1);
+        //selection = getch();
+        //
+
+        //if (selection == KEY_UP) {
+        //    display_start_menu(selection);
+        //}
+
+        //else if (selection == KEY_DOWN) {
+        //    display_start_menu(selection);
+
+        //}
+
+        //else if (selection == 27) return GameState::EXIT;
+
+        //doupdate();
+
+        //timeout(1000);
+        //pressed = getch();
+        //
+        //if (pressed == ERR) printw("Test");
+
+        //if ((pressed == ' ' || pressed == '\n') && selection == KEY_UP) {
+        //    nodelay(stdscr, true);
+        //    return GameState::PLAYING;
+        //}
+
+        //else if ((pressed == ' ' || pressed == '\n') && selection == KEY_DOWN) {
+        //    return GameState::EXIT;
+        //}
+
+        selection = getch();
+
+        switch (selection) {
+        
+        
+        case '\n':
+        case ' ':
+            nodelay(stdscr, true);
+            return GameState::PLAYING;
+         
+        case 27: //ESC ch
+
+
+            return GameState::EXIT;
+
+        case KEY_UP:
+            display_start_menu(selection);
+            break;
+
+        case KEY_DOWN:
+            display_start_menu(selection);
+            break;
+
+        default:
+
+            break;
+        }
+
+
+    }
+
+
+}
+
+
+GameState Game::test() {
+
+    nodelay(stdscr, false);
+
+
 }
 
 void Game::draw_hud() {
@@ -211,9 +363,9 @@ void Game::draw_hud() {
 
 }
 
-
-GameState Game::run() {
+GameState Game::game_loop() {
     
+   
     const int FRAME_MS = 17;
     const int player_h = 3, player_w = 6;
     const int player_posy = LINES - (player_h + 3);
@@ -242,7 +394,6 @@ void Game::reset() {
 
     explosions.clear();
     enemies.clear();
-    //player.reset();
 
     player->set_alive_status(true);
     player->set_score(0);
@@ -251,6 +402,8 @@ void Game::reset() {
     frame = 0;
 
 }
+
+//Updates the game flow.
 
 void Game::update() {
 

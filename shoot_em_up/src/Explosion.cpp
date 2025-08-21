@@ -9,6 +9,7 @@ Explosion::Explosion(int start_y, int start_x, int color, int& score) :  lifetim
 	particles.push_back({ {start_y, start_x}, {-1, -1}, {color} });
 	
 	score_position = {start_y, start_x };
+	beep();
 }
 
 bool Explosion::update() {
