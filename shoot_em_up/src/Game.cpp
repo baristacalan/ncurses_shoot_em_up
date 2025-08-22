@@ -401,6 +401,7 @@ void Game::update() {
 
 //Clears screen, draws player, enemies, bullets and explosions every time it is called.
 
+
 void Game::render() {
 
 
