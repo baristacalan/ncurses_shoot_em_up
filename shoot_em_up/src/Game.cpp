@@ -52,8 +52,6 @@ namespace {
 } // namespace
 
 
-
-
 Game::Game() : is_running(true), is_paused(false), frame(0) { init_curses(); } //Game class ctor.
 
 void Game::run() {
@@ -62,19 +60,17 @@ void Game::run() {
 
     while (current_state != GameState::EXIT) {
 
-
         if (current_state == GameState::MAIN_MENU) {
             current_state = main_menu_loop();
         }
-
 
         else if (current_state == GameState::PLAYING) {
 
             current_state = game_loop();
         }
-
         else if (current_state == GameState::RESTART) {
             this->reset();
+            timer.reset();
             current_state = GameState::PLAYING;
         }
 
@@ -407,7 +403,6 @@ void Game::update() {
 }
 
 //Clears screen, draws player, enemies, bullets and explosions every time it is called.
-
 
 void Game::render() {
 
