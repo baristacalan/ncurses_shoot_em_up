@@ -15,9 +15,6 @@ class Player : public Entity {
 
 
 public:
-    
-    Player(const Player&) = delete;
-    Player& operator=(const Player&) = delete;
 
     Player(int height, int width, int posy, int posx, chtype chr1, chtype chr2, int color_pair);
 

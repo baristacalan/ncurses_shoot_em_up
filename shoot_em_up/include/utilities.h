@@ -6,6 +6,7 @@
 #include <vector>
 #include <memory>
 #include <random>
+#include <chrono>
 
 struct Points { int y, x;};
 
@@ -27,7 +28,8 @@ enum COLORS : short {
     BLUE= 6,
     BKG_YELLOW = 7,
     BKG_RED = 8,
-    BKG_BLUE = 9
+    BKG_BLUE = 9,
+    WHITE
 };
 
 

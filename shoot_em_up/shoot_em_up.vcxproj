@@ -140,6 +140,7 @@
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\Explosion.cpp" />
     <ClCompile Include="src\Player.cpp" />
+    <ClCompile Include="src\Timer.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\Enemy.h" />
@@ -147,6 +148,7 @@
     <ClInclude Include="include\Game.h" />
     <ClInclude Include="include\Explosion.h" />
     <ClInclude Include="include\Player.h" />
+    <ClInclude Include="include\Timer.h" />
     <ClInclude Include="include\utilities.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

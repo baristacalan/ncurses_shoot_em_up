@@ -20,7 +20,7 @@ void Entity::draw(/*int h, int w, int y, int x,*/ chtype chr1, chtype chr2) {
 void Entity::redraw(chtype chr1, chtype chr2) {
     if (!object) return;
     adjust_to_screen();
-    if (color_pair > 0) wbkgd(object, COLOR_PAIR(color_pair));
+    //if (color_pair > 0) wbkgd(object, COLOR_PAIR(color_pair));
     mvwin(object, position.y, position.x);
     box(object, chr1, chr2);
     wnoutrefresh(object);

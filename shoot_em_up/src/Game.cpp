@@ -21,6 +21,7 @@ namespace {
             init_pair(BKG_YELLOW, COLOR_YELLOW, COLOR_YELLOW);
             init_pair(BKG_RED, COLOR_RED, COLOR_RED);
             init_pair(BKG_BLUE, COLOR_BLACK, COLOR_BLUE);
+            init_pair(WHITE, COLOR_WHITE, -1);
         }
 
         keypad(stdscr, true); //Enables whole keyboard
@@ -150,7 +151,7 @@ void Game::process_collisions() {
                 player->set_successful_shots(++success_shots);
                 player->set_score(score);
 
-                explosions.emplace_back(std::make_unique<Explosion>(explosion_y, explosion_x, YELLOW, gained_point));
+                explosions.emplace_back(Explosion(explosion_y, explosion_x, YELLOW, gained_point));
 
                 beep();
 
@@ -325,6 +326,11 @@ void Game::draw_hud() {
     attron(COLOR_PAIR(BLUE) | A_BOLD);
     mvprintw(2, COLS - 23, "SUCCESSFUL SHOTS: %d", success_shots);
     attroff(COLOR_PAIR(BLUE) | A_BOLD);
+    
+    attron(COLOR_PAIR(WHITE) | A_BOLD);
+    timer.draw();
+    attroff(COLOR_PAIR(WHITE) | A_BOLD);
+
 
 
 }
@@ -332,7 +338,7 @@ void Game::draw_hud() {
 GameState Game::game_loop() {
     
    
-    const int FRAME_MS = 17;
+    const int FRAME_MS = 16; //30 fps
     const int PLAYER_HEIGHT = 3, PLAYER_WIDTH = 6;
     const int PLAYER_POSY = LINES - (PLAYER_HEIGHT + 3);
     const int PLAYER_POSX = (COLS - PLAYER_WIDTH) / 2;
@@ -340,6 +346,7 @@ GameState Game::game_loop() {
 
 
     this->player = std::make_unique<Player>(PLAYER_HEIGHT, PLAYER_WIDTH, PLAYER_POSY, PLAYER_POSX, DRAW_TYPE, DRAW_TYPE, BKG_BLUE);
+
 
     while (this->is_running) {
 
@@ -388,7 +395,7 @@ void Game::update() {
 
     for (auto it = explosions.begin(); it != explosions.end();) {
 
-        if (!(*it)->update()) it = explosions.erase(it);
+        if (!it->update()) it = explosions.erase(it);
         else ++it;
     }
 
@@ -407,6 +414,16 @@ void Game::render() {
 
     if(!is_paused) erase();
     
+    player->draw_bullets();
+
+    for (const auto& explosion : explosions) {
+        explosion.draw();
+    }
+
+    draw_hud();
+
+    wnoutrefresh(stdscr);
+    
     player->redraw(5, 5);
 
     //Loops through enemies vector and draws.
@@ -414,15 +431,8 @@ void Game::render() {
         enemy->redraw(0, 0);
     }
 
-    player->draw_bullets();
-
-    for (const auto& explosion : explosions) {
-        explosion->draw();
-    }
-
-    draw_hud();
-
     if (is_paused) display_pause_menu();
+
 
     doupdate();
 
@@ -432,5 +442,6 @@ Game::~Game() {
     is_running = false;
     player.reset();
     enemies.clear();
+    timer.reset();
     endwin();
 }

@@ -5,7 +5,7 @@
 #include "Player.h"
 #include "Enemy.h"
 #include "Explosion.h"
-
+#include "Timer.h"
 
 enum class GameState {
     
@@ -21,7 +21,8 @@ class Game {
     //Objects
     std::vector<std::unique_ptr<Enemy>> enemies;
     std::unique_ptr<Player> player;
-    std::vector<std::unique_ptr<Explosion>> explosions;
+    std::vector<Explosion> explosions;
+    Timer timer;
 
     //Variables
     bool is_running;
