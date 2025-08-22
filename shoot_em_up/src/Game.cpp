@@ -340,7 +340,7 @@ GameState Game::game_loop() {
     const int PLAYER_POSX = (COLS - PLAYER_WIDTH) / 2;
     const int DRAW_TYPE = 5;
 
-
+    timer.start();
     this->player = std::make_unique<Player>(PLAYER_HEIGHT, PLAYER_WIDTH, PLAYER_POSY, PLAYER_POSX, DRAW_TYPE, DRAW_TYPE, BKG_BLUE);
 
 

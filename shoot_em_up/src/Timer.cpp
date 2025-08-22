@@ -1,5 +1,11 @@
 #include "Timer.h"
 
+void Timer::start() {
+
+	start_tp = steady_clock::now();
+
+}
+
 void Timer::reset() {
 	start_tp = steady_clock::now();
 }
@@ -15,7 +21,7 @@ void Timer::draw() const {
 	mvprintw(1, (COLS - 23) / 2, "TIME: %02d:%02d", minutes, seconds);
 }
 
-Timer::Timer() {
-
-	start_tp = steady_clock::now();
-}
+//Timer::Timer() {
+//
+//	start_tp = steady_clock::now();
+//}

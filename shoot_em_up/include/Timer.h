@@ -14,12 +14,14 @@ private:
 
 public:
 
+	void start();
+
 	void reset();
 
 	void draw() const;
 
 
-	Timer();
+	Timer()=default;
 	~Timer() = default;
 
 };
