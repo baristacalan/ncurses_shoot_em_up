@@ -107,44 +107,52 @@ void Game::handle_input(int ch) {
 
 void Game::process_collisions() {
 
-    std::vector<Bullet>& bullets = player->get_bullets();
+    std::vector<Bullet>& bullets = player->get_bullets(); // Get bullets vector
 
     int score = player->get_score();
 
     int success_shots = player->get_successful_shots();
 
-
+    //Iterate on enemies vector.
     for (auto it_enemy = enemies.begin(); it_enemy != enemies.end(); ) {
         bool enemy_destroyed = false;
+        //Start iterating on bullets vector
         for (auto it_bullet = bullets.begin(); it_bullet != bullets.end(); ) {
+
+            //Check any existing collisions with the iterated objects.
             if (check_collision((*it_enemy)->get_position(), (*it_enemy)->get_size(), it_bullet->position_b, { 1, 1 })) {
 
 
+                //If a red enemy will be hit, player will die.
                 if ((*it_enemy)->get_color() == BKG_RED) {
 
                     this->is_running = false;
                     player->set_alive_status(false);
+                    it_enemy = enemies.erase(it_enemy);
+                    it_bullet = bullets.erase(it_bullet);
                     break;
                 }
 
+                //May change this into Rect struct later on.
                 Points enemy_pos = (*it_enemy)->get_position();
                 Points enemy_size = (*it_enemy)->get_size();
 
                 int explosion_x = enemy_pos.x + enemy_size.x / 2;
                 int explosion_y = enemy_pos.y + enemy_size.y / 2;
 
-
+                //Erase the collided objects(Enemy and )
                 it_bullet = bullets.erase(it_bullet);
                 it_enemy = enemies.erase(it_enemy);
                 enemy_destroyed = true;
+                
                 int gained_point = rand_point();
                 score += gained_point;
                 player->set_successful_shots(++success_shots);
                 player->set_score(score);
 
-                explosions.emplace_back(std::make_unique<Explosion>(explosion_y, explosion_x, RED, gained_point));
+                explosions.emplace_back(std::make_unique<Explosion>(explosion_y, explosion_x, YELLOW, gained_point));
 
-                //beep();
+                beep();
 
                 break;
             }
@@ -164,7 +172,7 @@ void Game::process_collisions() {
     }
 }
 
-//Checks if the player alive. If so, clears screen and prints game over
+//Checks if the player alive. If so, clears screen and prints game over. Asks if you want to quit or restart.
 GameState Game::game_over() {
     
     if (!player->is_alive()) {
@@ -196,11 +204,7 @@ GameState Game::game_over() {
     return GameState::EXIT;
 }
 
-void Game::toggle_pause() {
-   
-    is_paused = !is_paused;
-
-}
+void Game::toggle_pause() { is_paused = !is_paused; }
 
 void Game::display_pause_menu() {
 
@@ -271,12 +275,12 @@ GameState Game::main_menu_loop() {
 
         case KEY_UP:
             if (current_selection == 1) {
-                current_selection = 0;
+                current_selection = 0; //Toggle to PLAY.
             }
             break;
         case KEY_DOWN:
             if (current_selection == 0) {
-                current_selection = 1;
+                current_selection = 1; //Toggle to EXIT.
             }
             break;
 
@@ -329,11 +333,13 @@ GameState Game::game_loop() {
     
    
     const int FRAME_MS = 17;
-    const int player_h = 3, player_w = 6;
-    const int player_posy = LINES - (player_h + 3);
-    const int player_posx = (COLS - player_w) / 2;
+    const int PLAYER_HEIGHT = 3, PLAYER_WIDTH = 6;
+    const int PLAYER_POSY = LINES - (PLAYER_HEIGHT + 3);
+    const int PLAYER_POSX = (COLS - PLAYER_WIDTH) / 2;
+    const int DRAW_TYPE = 5;
 
-    this->player = std::make_unique<Player>(player_h, player_w, player_posy, player_posx, 5, 5, BKG_BLUE);
+
+    this->player = std::make_unique<Player>(PLAYER_HEIGHT, PLAYER_WIDTH, PLAYER_POSY, PLAYER_POSX, DRAW_TYPE, DRAW_TYPE, BKG_BLUE);
 
     while (this->is_running) {
 
@@ -402,12 +408,10 @@ void Game::render() {
     
     player->redraw(5, 5);
 
-
     //Loops through enemies vector and draws.
     for (const auto& enemy : enemies) {
         enemy->redraw(0, 0);
     }
-
 
     player->draw_bullets();
 
@@ -419,10 +423,8 @@ void Game::render() {
 
     if (is_paused) display_pause_menu();
 
-
     doupdate();
 
-   
 }
 
 Game::~Game() {

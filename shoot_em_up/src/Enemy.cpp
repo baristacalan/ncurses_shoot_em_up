@@ -37,18 +37,27 @@ void Enemy::update_enemy(std::vector<std::unique_ptr<Enemy>>& enemies, int& fram
 
 void Enemy::spawn_enemy(std::vector<std::unique_ptr<Enemy>>& enemies, int& frame) {
 
+    const int ew = 4, eh = 3;
+    
+    int rand_posx_yellow = rand_x(ew);
+    int rand_posx_red = rand_x(ew);
 
-    //Controls spawn frequency
-    if (frame % ENEMY_SPAWN_INTERVAL == 0) {
-        int ew = 4, eh = 3;
-        enemies.emplace_back(std::make_unique<Enemy>(eh, ew, 0, rand_x(ew), BKG_YELLOW, 0, 0));
+    //To prevent overlapping enemies.
+    if (rand_posx_yellow < rand_posx_red + ew) {
+        rand_posx_yellow = rand_posx_red + ew + 3 * ew;
     }
 
 
-    if (frame % 100 == 0) {
+    //Controls spawn frequency
+    if (frame % ENEMY_SPAWN_INTERVAL == 0) {
+        
+        enemies.emplace_back(std::make_unique<Enemy>(eh, ew, 0, rand_posx_yellow, BKG_YELLOW, 0, 0));
+    }
 
-        int ew = 4, eh = 3;
-        enemies.emplace_back(std::make_unique<Enemy>(eh, ew, 0, rand_x(ew), BKG_RED, 0, 0));
+
+    if (frame % 70 == 0) {
+
+        enemies.emplace_back(std::make_unique<Enemy>(eh, ew, 0, rand_posx_red, BKG_RED, 0, 0));
     }
 }
 
