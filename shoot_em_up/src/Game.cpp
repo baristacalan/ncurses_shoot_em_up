@@ -163,6 +163,7 @@ void Game::process_collisions() {
         if (check_collision(player->get_position(), player->get_size(), (*it_enemy)->get_position(), (*it_enemy)->get_size())) {
             is_running = false;
             player->set_alive_status(false);
+            flash();
             break;
         }
         ++it_enemy;
@@ -201,7 +202,18 @@ GameState Game::game_over() {
     return GameState::EXIT;
 }
 
-void Game::toggle_pause() { is_paused = !is_paused; }
+void Game::toggle_pause() { 
+    
+    if (!is_paused) {
+        is_paused = true;
+        timer.stop();
+    }
+    else {
+        is_paused = false;
+        timer.start();
+    }
+
+}
 
 void Game::display_pause_menu() {
 
@@ -371,6 +383,7 @@ void Game::reset() {
 
     is_running = true;
     frame = 0;
+    timer.reset();
 
 }
 

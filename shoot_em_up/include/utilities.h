@@ -29,7 +29,7 @@ enum COLORS : short {
     BKG_YELLOW = 7,
     BKG_RED = 8,
     BKG_BLUE = 9,
-    WHITE
+    WHITE = 10
 };
 
 

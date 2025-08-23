@@ -1,27 +1,47 @@
 #include "Timer.h"
 
 void Timer::start() {
+	
+	if (!paused) return;
+	auto now = steady_clock::now();
 
-	start_tp = steady_clock::now();
+	if (pause_tp.time_since_epoch().count() != 0) {
+		paused_total += duration_cast<milliseconds>(now - pause_tp);
+	}
+	else {
+		start_tp = now;
+		paused_total = milliseconds{ 0 };
+	}
+	paused = false;
+
+}
+
+void Timer::stop() {
+
+	if (paused) return;
+
+	pause_tp = steady_clock::now();
+	paused = true;
 
 }
 
 void Timer::reset() {
+	paused = true;
+	paused_total = milliseconds{ 0 };
 	start_tp = steady_clock::now();
+	pause_tp = {};
 }
 
 void Timer::draw() const {
+	auto base = paused ? pause_tp : steady_clock::now();
+	if (start_tp.time_since_epoch().count() == 0) return;
 
-	auto now = steady_clock::now(); //returns time_point
-	auto elapsed = duration_cast<seconds>(now - start_tp).count(); //Returns long long
+	auto ms = duration_cast<milliseconds>(base - start_tp) - paused_total;
+	if (ms.count() < 0) ms = milliseconds{ 0 };
 
-	int minutes = static_cast<int>(elapsed / 60);
-	int seconds = static_cast<int>(elapsed % 60);
+	auto total_s = duration_cast<seconds>(ms).count();
+	int mm = static_cast<int>(total_s / 60);
+	int ss = static_cast<int>(total_s % 60);
 
-	mvprintw(1, (COLS - 23) / 2, "TIME: %02d:%02d", minutes, seconds);
+	mvprintw(0, (COLS - 17) / 2, "TIME: %02d:%02d", mm, ss);
 }
-
-//Timer::Timer() {
-//
-//	start_tp = steady_clock::now();
-//}
