@@ -3,6 +3,9 @@
 #define PLAYER_H
 #include "utilities.h"
 #include "Entity.h"
+#include "Timer.h"
+
+constexpr milliseconds FIRE_COOLDOWN_MS{ 300 };
 
 struct Bullet { Points position_b; Bullet(int y, int x) : position_b{ y,x } {} };
 
@@ -12,6 +15,9 @@ class Player : public Entity {
     int score{ 0 };
     int total_shoot_count{0};
     int successful_shots{0};
+
+    steady_clock::time_point last_shot{}; //Last shot time point
+
 
 
 public:

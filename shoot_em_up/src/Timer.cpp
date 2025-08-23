@@ -2,8 +2,8 @@
 
 void Timer::start() {
 	
-	if (!paused) return;
-	auto now = steady_clock::now();
+	if (!paused) return; //Cannot start if already running.
+	auto now = steady_clock::now(); //Check point on start
 
 	if (pause_tp.time_since_epoch().count() != 0) {
 		paused_total += duration_cast<milliseconds>(now - pause_tp);
@@ -31,6 +31,7 @@ void Timer::reset() {
 	start_tp = steady_clock::now();
 	pause_tp = {};
 }
+
 
 void Timer::draw() const {
 	auto base = paused ? pause_tp : steady_clock::now();

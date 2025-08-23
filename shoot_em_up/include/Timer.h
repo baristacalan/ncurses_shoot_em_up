@@ -22,6 +22,9 @@ public:
 
 	void draw() const;
 
+	steady_clock::time_point get_start_tp() const { return start_tp; };
+	steady_clock::time_point get_pause_tp() const { return pause_tp; };
+
 
 	Timer() = default;
 	~Timer() = default;

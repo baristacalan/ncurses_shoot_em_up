@@ -11,8 +11,24 @@ void Player::move_left(int speed) { Entity::move_left(speed); }
 void Player::move_right(int speed) { Entity::move_right(speed); }
 
 void Player::fire() {
+    
+    auto now = steady_clock::now(); //Þimdiye iþaret koyar
+
+
+    //Eðer last_shot zaman noktasý baþlangýçtan beri deðiþtiyse VE atýþ üzerinden geçen süre cooldowndan azsa metod durur. 
+    // Yoksa þimdiki atýþý son atýþ yapar
+    if (last_shot.time_since_epoch().count() != 0 && now - last_shot < FIRE_COOLDOWN_MS) {
+
+        return;
+    }
+
+    last_shot = now;
+
+
     auto position_player = get_position(), size_player = get_size();
+
     bullets.push_back({ position_player.y - 1, position_player.x + size_player.x / 2 });
+
     total_shoot_count++;
 }
 
