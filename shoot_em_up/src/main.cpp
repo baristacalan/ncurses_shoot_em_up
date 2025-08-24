@@ -6,6 +6,5 @@ int main() {
 	
 	g.run();
 
-
 	return 0;
 }

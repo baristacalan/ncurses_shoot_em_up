@@ -1,4 +1,5 @@
 #include "Enemy.h"
+#include "Timer.h"
 
 //Helper functions
 
@@ -23,7 +24,8 @@ bool Enemy::fall(int step) {
 
 void Enemy::update_enemy(std::vector<std::unique_ptr<Enemy>>& enemies, int& frame, int speed) {
 
-    
+
+
     //Controls the movement frequency
     if ((frame % ENEMY_MOVE_INTERVAL) == 0) {
 

@@ -110,6 +110,8 @@ void Game::process_collisions() {
 
     int success_shots = player->get_successful_shots();
 
+    int life = player->get_life();
+
     //Iterate on enemies vector.
     for (auto it_enemy = enemies.begin(); it_enemy != enemies.end(); ) {
         bool enemy_destroyed = false;
@@ -123,10 +125,20 @@ void Game::process_collisions() {
                 //If a red enemy will be hit, player will die.
                 if ((*it_enemy)->get_color() == BKG_RED) {
 
-                    this->is_running = false;
-                    player->set_alive_status(false);
                     it_enemy = enemies.erase(it_enemy);
                     it_bullet = bullets.erase(it_bullet);
+                    player->set_life(--life);
+                    flash();
+
+                    if (player->get_life() == 0) {
+                        player->set_alive_status(false);
+                        this->is_running = false;
+                    }
+
+                    //this->is_running = false;
+                    
+                    //player->set_alive_status(false);
+                    
                     break;
                 }
 
@@ -161,8 +173,19 @@ void Game::process_collisions() {
         if (enemy_destroyed) continue;
  
         if (check_collision(player->get_position(), player->get_size(), (*it_enemy)->get_position(), (*it_enemy)->get_size())) {
-            is_running = false;
-            player->set_alive_status(false);
+
+            player->set_life(--life);
+
+            it_enemy = enemies.erase(it_enemy);
+
+
+            if (player->get_life() <= 0) {
+                is_running = false;
+                player->set_alive_status(false);
+            }
+
+            /*is_running = false;
+            player->set_alive_status(false);*/
             flash();
             break;
         }
@@ -186,8 +209,9 @@ GameState Game::game_over() {
         mvprintw(y, x, msg);
         attroff(COLOR_PAIR(YELLOW) | A_BOLD);
 
-        mvprintw(y + 3, (COLS - 40) / 2, "Press 'R' to Restart or ESC to exit...");
+        mvprintw(y + 3, (COLS - 35) / 2, "Press 'R' to Restart or ESC to exit...");
         mvprintw(y + 5, (COLS - 7) / 2, "SCORE: %d", player->get_score());
+        timer.draw(y + 7, (COLS - 10) / 2);
         refresh();
        
         nodelay(stdscr, false);
@@ -319,6 +343,8 @@ void Game::draw_hud() {
     int score = player->get_score();
     int success_shots = player->get_successful_shots();
 
+    int total_lives = player->get_life();
+
     attron(COLOR_PAIR(CYAN) | A_BOLD);
     mvprintw(0, 0, "X:%d Y:%d  ", pos.x, pos.y);
     attroff(COLOR_PAIR(CYAN) | A_BOLD);
@@ -336,10 +362,12 @@ void Game::draw_hud() {
     attroff(COLOR_PAIR(BLUE) | A_BOLD);
     
     attron(COLOR_PAIR(WHITE) | A_BOLD);
-    timer.draw();
+    timer.draw(0, (COLS - 17) / 2);
     attroff(COLOR_PAIR(WHITE) | A_BOLD);
 
-
+    attron(COLOR_PAIR(RED) | A_BOLD);
+    mvprintw(1, 0, "LIVES: %d", total_lives);
+    attroff(COLOR_PAIR(RED) | A_BOLD);
 
 }
 
@@ -393,10 +421,18 @@ void Game::update() {
 
     if (this->is_paused) return;
 
+    int total_time = timer.total_time_seconds();
+
     player->update_bullets();
     
     //Spawn frequency
     Enemy::spawn_enemy(enemies, frame);
+
+
+    //int level = total_time / 30;
+
+    //int speed = ENEMY_FALL_SPEED + level;
+
 
     Enemy::update_enemy(enemies, frame, ENEMY_FALL_SPEED);
 

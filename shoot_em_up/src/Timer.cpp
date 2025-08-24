@@ -33,7 +33,7 @@ void Timer::reset() {
 }
 
 
-void Timer::draw() const {
+void Timer::draw(int y, int x) const {
 	auto base = paused ? pause_tp : steady_clock::now();
 	if (start_tp.time_since_epoch().count() == 0) return;
 
@@ -44,5 +44,13 @@ void Timer::draw() const {
 	int mm = static_cast<int>(total_s / 60);
 	int ss = static_cast<int>(total_s % 60);
 
-	mvprintw(0, (COLS - 17) / 2, "TIME: %02d:%02d", mm, ss);
+	mvprintw(y, x, "TIME: %02d:%02d", mm, ss);
+}
+
+int Timer::total_time_seconds() {
+
+   if (start_tp.time_since_epoch().count() == 0) return 0;
+   auto now = paused ? pause_tp : steady_clock::now(); // Use pause_tp if paused, otherwise current time.  
+   auto elapsed = duration_cast<seconds>(now - start_tp - paused_total);  
+   return static_cast<int>(elapsed.count());  
 }

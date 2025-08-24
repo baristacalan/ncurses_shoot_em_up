@@ -10,12 +10,12 @@
 
 struct Points { int y, x;};
 
-struct Rect {
-
-	int posy, posx;
-	int height, width;
-
-};
+//struct Rect {
+//
+//	int posy, posx;
+//	int height, width;
+//
+//};
 
 
 enum COLORS : short {
@@ -33,10 +33,9 @@ enum COLORS : short {
 };
 
 
-constexpr int PLAYER_MOVE_SPEED = 4;
+constexpr int PLAYER_MOVE_SPEED = 3;
 constexpr int ENEMY_SPAWN_INTERVAL = 30; // in frames
 constexpr int ENEMY_MOVE_INTERVAL = 4;   // in frames
 constexpr int ENEMY_FALL_SPEED = 1;
-
 
 #endif // !UTILITIES_H

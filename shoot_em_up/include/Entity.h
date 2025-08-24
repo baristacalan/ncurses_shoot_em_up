@@ -9,6 +9,8 @@ protected:
     WINDOW* object{ nullptr };
     Points  size{ 0,0 };
     Points  position{ 0,0 };
+    //Rect rect;
+
     int     color_pair{ 0 };
     bool    alive{ true };
 
@@ -27,12 +29,13 @@ public:
     void set_position(int y, int x);
     void move_by(int dy, int dx);
     void move_left(int speed = 1) { move_by(0, -speed); }
-    void move_right(int step = 1) { move_by(0, step); }
-    void move_down(int step = 1) { move_by(step, 0); }
+    void move_right(int speed = 1) { move_by(0, speed); }
+    void move_down(int speed = 1) { move_by(speed, 0); }
 
     // access
     Points get_position() const { return position; }
     Points get_size()     const { return size; }
+
     bool   is_alive()     const { return alive; }
     void set_alive_status(bool alive) { this->alive = alive; }
     void   set_color(int pair) { color_pair = pair; }

@@ -16,6 +16,8 @@ class Player : public Entity {
     int total_shoot_count{0};
     int successful_shots{0};
 
+    int life;
+
     steady_clock::time_point last_shot{}; //Last shot time point
 
 
@@ -40,6 +42,9 @@ public:
 
     int get_score() const;
     void set_score(int new_score);
+
+    int get_life() const { return this->life; }
+    void set_life(int life) { this->life = life; }
 
     ~Player() override = default;
 };

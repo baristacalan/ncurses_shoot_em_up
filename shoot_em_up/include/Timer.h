@@ -12,6 +12,7 @@ private:
 	steady_clock::time_point start_tp{}; //Time points work like a checkpoint. 
 	steady_clock::time_point pause_tp{}; //Pause check_point
 	milliseconds paused_total{0};		// Total time in pause.
+
 	bool paused{ true };
 
 public:
@@ -20,10 +21,12 @@ public:
 	void stop();
 	void reset();
 
-	void draw() const;
+	void draw(int y, int x) const;
 
 	steady_clock::time_point get_start_tp() const { return start_tp; };
 	steady_clock::time_point get_pause_tp() const { return pause_tp; };
+
+	int total_time_seconds();
 
 
 	Timer() = default;

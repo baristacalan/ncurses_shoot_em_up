@@ -2,7 +2,7 @@
 #include "Player.h"
 
 Player::Player(int h, int w, int y, int x, chtype chr1, chtype chr2, int color_pair)
-    : Entity(h, w, y, x, color_pair){
+    : Entity(h, w, y, x, color_pair), life(3){
     draw(/*h, w, y, x,*/ chr1, chr2);
 }
 
