@@ -37,5 +37,7 @@ constexpr int PLAYER_MOVE_SPEED = 3;
 constexpr int ENEMY_SPAWN_INTERVAL = 30; // in frames
 constexpr int ENEMY_MOVE_INTERVAL = 4;   // in frames
 constexpr int ENEMY_FALL_SPEED = 1;
+constexpr std::chrono::milliseconds FIRE_COOLDOWN_MS{ 200 };
+constexpr int FRAME_MS = 16; //60 fps
 
 #endif // !UTILITIES_H

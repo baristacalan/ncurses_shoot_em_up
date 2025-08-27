@@ -12,16 +12,11 @@ void Player::move_right(int speed) { Entity::move_right(speed); }
 
 void Player::fire() {
     
-    auto now = steady_clock::now(); //Þimdiye iþaret koyar
+    auto now = steady_clock::now();
 
-
-    //Eðer last_shot zaman noktasý baþlangýçtan beri deðiþtiyse VE atýþ üzerinden geçen süre cooldowndan azsa metod durur. 
-    // Yoksa þimdiki atýþý son atýþ yapar
-    if (last_shot.time_since_epoch().count() != 0 && now - last_shot < FIRE_COOLDOWN_MS) {
-
+    if (last_shot.time_since_epoch().count() != 0 && (now - last_shot) < FIRE_COOLDOWN_MS) {
         return;
     }
-
     last_shot = now;
 
 

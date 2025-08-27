@@ -5,7 +5,7 @@
 #include "Entity.h"
 #include "Timer.h"
 
-constexpr milliseconds FIRE_COOLDOWN_MS{ 300 };
+//constexpr milliseconds FIRE_COOLDOWN_MS{ 300 };
 
 struct Bullet { Points position_b; Bullet(int y, int x) : position_b{ y,x } {} };
 

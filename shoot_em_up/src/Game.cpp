@@ -374,7 +374,6 @@ void Game::draw_hud() {
 GameState Game::game_loop() {
     
    
-    const int FRAME_MS = 16; //30 fps
     const int PLAYER_HEIGHT = 3, PLAYER_WIDTH = 6;
     const int PLAYER_POSY = LINES - (PLAYER_HEIGHT + 3);
     const int PLAYER_POSX = (COLS - PLAYER_WIDTH) / 2;
