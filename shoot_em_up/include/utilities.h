@@ -10,14 +10,6 @@
 
 struct Points { int y, x;};
 
-//struct Rect {
-//
-//	int posy, posx;
-//	int height, width;
-//
-//};
-
-
 enum COLORS : short {
 
     CYAN = 1,

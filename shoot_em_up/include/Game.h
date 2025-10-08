@@ -45,9 +45,6 @@ class Game {
 
     void draw_hud();
 
-
-
-
 public:
     Game();
 

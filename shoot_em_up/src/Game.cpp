@@ -27,9 +27,8 @@ namespace {
         keypad(stdscr, true); //Enables whole keyboard
         noecho();
         cbreak(); //Gets input immediately, without pressing enter.
-        nodelay(stdscr, true); // Allows asynchronous
+        //nodelay(stdscr, true); // Allows asynchronous
         curs_set(0); //Turns off cursor.
-        //bkgd(COLOR_PAIR(BKG_YELLOW));
 
         leaveok(stdscr, true);
         refresh();
@@ -70,7 +69,6 @@ void Game::run() {
         }
         else if (current_state == GameState::RESTART) {
             this->reset();
-            timer.reset();
             current_state = GameState::PLAYING;
         }
 
@@ -350,15 +348,15 @@ void Game::draw_hud() {
     attroff(COLOR_PAIR(CYAN) | A_BOLD);
 
     attron(COLOR_PAIR(RED) | A_BOLD);
-    mvprintw(0, COLS - 23, "SHOTS COUNT: %d", shot_count);
+    mvprintw(0, COLS - 20, "SHOTS COUNT: %d", shot_count);
     attroff(COLOR_PAIR(RED) | A_BOLD);
 
     attron(COLOR_PAIR(GREEN) | A_BOLD);
-    mvprintw(1, COLS - 23, "SCORE: %d", score);
+    mvprintw(1, COLS - 20, "SCORE: %d", score);
     attroff(COLOR_PAIR(GREEN) | A_BOLD);
     
     attron(COLOR_PAIR(BLUE) | A_BOLD);
-    mvprintw(2, COLS - 23, "SUCCESSFUL SHOTS: %d", success_shots);
+    mvprintw(2, COLS - 20, "SUCCESSFUL SHOTS: %d", success_shots);
     attroff(COLOR_PAIR(BLUE) | A_BOLD);
     
     attron(COLOR_PAIR(WHITE) | A_BOLD);
