@@ -12,7 +12,7 @@ int rand_x(int w) {
 
 Enemy::Enemy(int h, int w, int y, int x, int cp, chtype chr1, chtype chr2)
     : Entity(h, w, y, x, cp) {
-    draw(/*h, w, y, x,*/ chr1, chr2);
+    draw(h, w, y, x, chr1, chr2);
 }
 
 bool Enemy::fall(int step) {

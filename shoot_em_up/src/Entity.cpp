@@ -4,12 +4,12 @@ Entity::Entity(int h, int w, int y, int x, int color)
     : size{ h,w }, position{ y,x }, color_pair{ color } {
 }
 
-void Entity::draw(/*int h, int w, int y, int x,*/ chtype chr1, chtype chr2) {
+void Entity::draw(int h, int w, int y, int x, chtype chr1, chtype chr2) {
     //size = { h,w };
     //position = { y,x };
     adjust_to_screen();
 
-    if (!object) object = newwin(size.y, size.x, position.y, position.x);
+    if (!object) object = newwin(h, w, y, x);
     //if (!object) object = newwin(rect.height, rect.width, rect.posy, rect.posy);
     if (!object) return;
 
@@ -18,7 +18,7 @@ void Entity::draw(/*int h, int w, int y, int x,*/ chtype chr1, chtype chr2) {
     wnoutrefresh(object);
 }
 
-void Entity::redraw(chtype chr1, chtype chr2) {
+void Entity::redraw(int h, int w, int y, int x, chtype chr1, chtype chr2) {
     if (!object) return;
     adjust_to_screen();
     //if (color_pair > 0) wbkgd(object, COLOR_PAIR(color_pair));

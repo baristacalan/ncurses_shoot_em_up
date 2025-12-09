@@ -465,11 +465,16 @@ void Game::render() {
 
     wnoutrefresh(stdscr);
     
-    player->redraw(5, 5);
+    Points pos = player->get_position();
+
+    Points size = player->get_size();
+
+
+    player->redraw(size.y, size.x, pos.y, pos.x, 5, 5);
 
     //Loops through enemies vector and draws.
     for (const auto& enemy : enemies) {
-        enemy->redraw(0, 0);
+        enemy->redraw(size.y, size.x, pos.y, pos.x, 0, 0);
     }
 
     if (is_paused) display_pause_menu();

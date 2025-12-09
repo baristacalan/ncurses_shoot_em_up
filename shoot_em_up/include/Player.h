@@ -29,8 +29,8 @@ public:
     std::vector<Bullet>& get_bullets();
 
 
-    void move_left(int speed);
-    void move_right(int speed);
+    void move_left(int speed) override;
+    void move_right(int speed) override;
     void fire();
     void draw_bullets() const;
     void update_bullets();
